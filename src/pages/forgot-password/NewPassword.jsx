@@ -1,12 +1,8 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import logo from '../../assets/images/logo.svg';
-import { auth, db } from '../../config/firebase';
 
-export const Register = () => {
+export const NewPassword = () => {
     const [email, setEmail] = useState('')
     const [displayName, setDisplayName] = useState('')
     const [password, setPassword] = useState('')
@@ -15,23 +11,9 @@ export const Register = () => {
 
     const handleSignUp = async (e) => {
         e.preventDefault();
-        console.log('displayName before submit: ', displayName);
 
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            const user = auth.currentUser
-            console.log('current user at Register: ', user)
-            console.log("User registered successfully")
 
-            if (user) {
-                await setDoc(doc(db, "users", user.uid), {
-                    uid: user.uid,
-                    displayName: displayName,
-                    email: email,
-                });
-            }
-            toast.success("User registered successfully", { position: "top-center" })
-            navigate('/logged');
         } catch (error) {
             console.error('Error registering user:', error);
             let message = '';
@@ -48,8 +30,6 @@ export const Register = () => {
                 default:
                     message = 'An error occurred. Please try again later.';
             }
-            toast.error(message, { position: "bottom-center" })
-
             setErrorMessage(message);
         }
     }
@@ -62,7 +42,7 @@ export const Register = () => {
         <div className="flex min-h-[100vh] flex-col justify-center items-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <img className="mx-auto h-16 w-auto" src={logo} />
-                <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Register a new account</h2>
+                <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Remind password</h2>
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border-2 rounded-md p-8 shadow-2xl">
@@ -83,49 +63,12 @@ export const Register = () => {
                                 required className="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                         </div>
                     </div>
-
-                    <div>
-                        <label
-                            htmlFor="displayName"
-                            className="block text-sm font-medium leading-6 text-gray-900">
-                            Display name
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                id="displayName"
-                                onChange={handleDisplayNameChange}
-                                name="displayName"
-                                type="text"
-                                autoComplete="displayName"
-                                required
-                                className="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-                        </div>
-                    </div>
-
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <label
-                                htmlFor="password"
-                                className="block text-sm font-medium leading-6 text-gray-900">
-                                Password
-                            </label>
-                        </div>
-                        <div className="mt-2">
-                            <input id="password"
-                                onChange={handlepasswordChange}
-                                name="password"
-                                type="password"
-                                autoComplete="current-password"
-                                required
-                                className="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-                        </div>
-                    </div>
                     {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
                     <div>
                         <button type="submit"
                             className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                            Register
+                            Send
                         </button>
                     </div>
                 </form>
@@ -143,4 +86,4 @@ export const Register = () => {
     )
 }
 
-export default Register
+export default NewPassword

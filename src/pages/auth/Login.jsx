@@ -1,8 +1,10 @@
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { useState } from "react"
-import { useNavigate, Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 import logo from '../../assets/images/logo.svg'
 import { auth } from '../../config/firebase'
+
 
 export const Login = () => {
     const [email, setEmail] = useState('')
@@ -17,9 +19,8 @@ export const Login = () => {
 
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            console.log("User signed in successfully");
-            navigate("/");
-            // Wyczyść pola formularza po pomyślnym zalogowaniu
+            toast.success("User login successfull", { position: "top-center" })
+            navigate("/logged");
             e.target.reset();
         } catch (error) {
             console.error("Error signing in:", error);
@@ -37,6 +38,7 @@ export const Login = () => {
                 default:
                     message = 'An error occurred. Please try again later.';
             }
+            toast.error(message, { position: "bottom-center" })
             setErrorMessage(message);
         }
     }
@@ -68,7 +70,7 @@ export const Login = () => {
                 </h2>
             </div>
 
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border-2 rounded-md p-8">
+            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border-2 rounded-md p-8 shadow-2xl">
                 <form className="space-y-6" onSubmit={handleSignIn}>
                     <div>
                         <label
@@ -96,11 +98,11 @@ export const Login = () => {
                                 Password
                             </label>
                             <div className="text-sm">
-                                <a
-                                    href="#"
+                                <Link
+                                    to="/new-password"
                                     className="font-semibold text-indigo-600 hover:text-indigo-500">
                                     Forgot password?
-                                </a>
+                                </Link>
                             </div>
                         </div>
                         <div className="mt-2">

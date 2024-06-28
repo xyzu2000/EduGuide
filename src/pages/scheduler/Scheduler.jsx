@@ -2,7 +2,7 @@ import React from 'react'
 
 export const Scheduler = () => {
   return (
-    <div>Scheduler</div>
+    <div className='text-center text-4xl font-semibold'>Scheduler</div>
   )
 }
 

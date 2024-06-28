@@ -1,19 +1,24 @@
 import { signOut } from 'firebase/auth';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { CiCalendar } from 'react-icons/ci';
 import { FaBars, FaCommentAlt, FaHome, FaSignOutAlt, FaUserAlt } from 'react-icons/fa';
+import { IoSettingsSharp } from "react-icons/io5";
 import { TbMessageChatbot } from 'react-icons/tb';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 import { auth } from '../config/firebase';
+import { AuthContext } from '../context/AuthContext';
+
 
 const SideNav = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   const navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
 
   const menuItems = [
     {
-      path: '/',
+      path: '/logged',
       name: 'Welcome',
       icon: <FaHome />,
     },
@@ -37,6 +42,11 @@ const SideNav = ({ children }) => {
       name: 'Scheduler',
       icon: <CiCalendar />,
     },
+    {
+      path: '/updateProfile',
+      name: 'Update Profile',
+      icon: <IoSettingsSharp />,
+    },
   ];
 
   const logoutItem = {
@@ -44,15 +54,20 @@ const SideNav = ({ children }) => {
     icon: <FaSignOutAlt />,
   };
   const handleLogout = async () => {
-    await signOut(auth);
-    navigate('/');
+    try {
+      await signOut(auth)
+      toast.success("User logout", { position: "top-center" })
+      navigate('/');
+    } catch (error) {
+      toast.error(`User logout failed, ${error}`, { position: "bottom-center" })
+    }
   };
   return (
     <div>
       <div style={{ width: isOpen ? '200px' : '50px' }} className={`sideNav ${isOpen ? 'open' : ''}`}>
         <div className="top_section">
           <h1 style={{ display: isOpen ? 'block' : 'none' }} className="logo">
-            CHAT APP
+            Edu Guide
           </h1>
           <div style={{ marginLeft: isOpen ? '50px' : '0px' }} className="bars">
             <FaBars onClick={toggle} />
