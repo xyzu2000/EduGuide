@@ -1,9 +1,11 @@
-import { signInWithEmailAndPassword } from "firebase/auth"
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
+import { doc, setDoc } from "firebase/firestore"
 import { useState } from "react"
+import { GoogleButton } from 'react-google-button'
 import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import logo from '../../assets/images/logo.svg'
-import { auth } from '../../config/firebase'
+import { auth, db, provider } from '../../config/firebase'
 
 
 export const Login = () => {
@@ -46,16 +48,31 @@ export const Login = () => {
     const handleEmailChange = (e) => { setEmail(e.target.value) }
     const handlePasswordChange = (e) => { setPassword(e.target.value) }
 
-    const signInWithGoogle = async () => {
-        const results = await signInWithPopup(auth, provider)
-        const authInfo = {
-            userID: results.user.uid,
-            name: results.user.displayName,
-            profilePhoto: results.user.photoURL,
-            isAuth: true
+    const handleSignInWithGoogle = async () => {
+        try {
+            await signInWithPopup(auth, provider)
+            const user = auth.currentUser
+            console.log("user:", user.uid, ",", user.email, ",", user.displayName, ", ", user.photoURL)
+            if (user) {
+                await setDoc(doc(db, "users", user.uid), {
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL
+                });
+            }
+            // const authInfo = {
+            //     uid: results.uid,
+            //     displayName: results.displayName,
+            //     email: results.email,
+            // }
+            // console.log(authInfo)
+            // localStorage.setItem("auth", JSON.stringify(authInfo))
+            toast.success("Logged with Google", { position: "top-center" })
+            navigate("/logged")
+        } catch (error) {
+            toast.error(error, { position: "bottom-center" })
         }
-        localStorage.setItem("auth", JSON.stringify(authInfo))
-        navigate("/logged")
     }
 
     return (
@@ -127,17 +144,11 @@ export const Login = () => {
                     </div>
                 </form>
 
-                <label className="block text-center my-4 text-sm font-medium leading-6 text-gray-900">Or continue with</label>
+                <label className="block text-center my-4 text-sm font-medium leading-6 text-gray-900">Or</label>
                 <div className="flex justify-center">
-                    <button
-                        className="font-semibold flex items-center border-2 rounded-md p-2 border-blue-700"
-                        onClick={signInWithGoogle}
-                    >
-                        <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/2048px-Google_%22G%22_logo.svg.png"
-                            className="w-5" />
-                        Google
-                    </button>
+                    <div className="max-w-[240px] m-auto py-2" >
+                        <GoogleButton onClick={handleSignInWithGoogle} />
+                    </div>
                 </div>
             </div>
 

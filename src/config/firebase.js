@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { getAnalytics } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { GoogleAuthProvider, getAuth } from 'firebase/auth';
 import {
     collection,
     doc,
@@ -34,6 +34,21 @@ export const auth = getAuth();
 export const analytics = getAnalytics(app);
 export const storage = getStorage();
 export const db = getFirestore();
+export const provider = new GoogleAuthProvider()
+
+// export const signInWithGoogle = () => {
+//     signInWithPopup(auth, provider).then((results) => {
+//         console.log(results)
+//         const authInfo = {
+//             userID: results.user.uid,
+//             name: results.user.displayName,
+//             profilePhoto: results.user.photoURL,
+//             isAuth: true
+//         }
+//     }).catch((error) => {
+//         console.log(error)
+//     })
+// }
 
 export const getUsersList = async () => {
     const usersCollection = collection(db, 'users');
