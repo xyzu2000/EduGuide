@@ -96,10 +96,7 @@ export const Scheduler = () => {
   if (!currentUser) {
     return <p className="text-center mt-10">Loading...</p>;
   }
-  const handleContextMenuClick = (e, event) => {
-    e.preventDefault();
-    handleContextMenu(e, event); // Przekazujemy zdarzenie i wydarzenie do funkcji obsługi menu kontekstowego
-  };
+
   return (
     <div className="Scheduler flex flex-col justify-center items-center min-h-screen">
       <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8 w-full max-w-4xl mb-8">

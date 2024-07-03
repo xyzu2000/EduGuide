@@ -1,5 +1,5 @@
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
-import { doc, setDoc } from "firebase/firestore"
+import { doc, getDoc, setDoc } from "firebase/firestore"
 import { useState } from "react"
 import { GoogleButton } from 'react-google-button'
 import { Link, useNavigate } from "react-router-dom"
@@ -50,30 +50,28 @@ export const Login = () => {
 
     const handleSignInWithGoogle = async () => {
         try {
-            await signInWithPopup(auth, provider)
-            const user = auth.currentUser
-            console.log("user:", user.uid, ",", user.email, ",", user.displayName, ", ", user.photoURL)
+            await signInWithPopup(auth, provider);
+            const user = auth.currentUser;
+            console.log("user:", user.uid, ",", user.email, ",", user.displayName, ",", user.photoURL);
             if (user) {
-                await setDoc(doc(db, "users", user.uid), {
-                    uid: user.uid,
-                    displayName: user.displayName,
-                    email: user.email,
-                    photoURL: user.photoURL
-                });
+                const userDocRef = doc(db, "users", user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+                if (!userDocSnap.exists()) {
+                    await setDoc(userDocRef, {
+                        uid: user.uid,
+                        displayName: user.displayName,
+                        email: user.email,
+                        photoURL: user.photoURL
+                    });
+                }
             }
-            // const authInfo = {
-            //     uid: results.uid,
-            //     displayName: results.displayName,
-            //     email: results.email,
-            // }
-            // console.log(authInfo)
-            // localStorage.setItem("auth", JSON.stringify(authInfo))
-            toast.success("Logged with Google", { position: "top-center" })
-            navigate("/logged")
+            toast.success("Logged with Google", { position: "top-center" });
+            navigate("/logged");
         } catch (error) {
-            toast.error(error, { position: "bottom-center" })
+            toast.error(error.message, { position: "bottom-center" });
         }
-    }
+    };
+
 
     return (
         <div className="flex min-h-[100vh] flex-col justify-center items-center px-6 py-12 lg:px-8">
