@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import logo from '../../assets/images/logo.svg';
+import userImg from "../../assets/images/user.png";
 import { auth, db } from '../../config/firebase';
 
 export const Register = () => {
@@ -28,6 +29,7 @@ export const Register = () => {
                     uid: user.uid,
                     displayName: displayName,
                     email: email,
+                    photoURL: userImg
                 });
             }
             toast.success("User registered successfully", { position: "top-center" })
