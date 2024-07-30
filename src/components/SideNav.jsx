@@ -58,13 +58,17 @@ const SideNav = ({ children }) => {
   return (
     <div className="flex">
       <div
-        className={`fixed left-0 top-0 z-10 bg-black text-white h-screen overflow-x-hidden flex flex-col items-center transition-width duration-300 ${isOpen ? 'w-48' : 'w-12'
+        className={`fixed left-0 top-0 z-10 bg-black text-white h-screen overflow-x-hidden flex flex-col items-center transition-all duration-300 sidebar ${isOpen ? 'w-48' : 'w-12'
           }`}
+        onMouseEnter={() => setIsOpen(true)}
+        onMouseLeave={() => setIsOpen(false)}
       >
         <div className="flex flex-col items-center justify-center py-4 w-full">
-          <h1 className={`text-2xl ${isOpen ? 'block' : 'hidden'}`}>Edu Guide</h1>
+          <div className='h-8'>
+            <h1 className={`text-2xl ${isOpen ? 'block' : 'hidden'}`}>Edu Guide</h1>
+          </div>
           <div className="mt-4">
-            <FaBars className="text-xl cursor-pointer" onClick={toggle} />
+            <FaBars className="text-xl cursor-pointer" />
           </div>
         </div>
         <div className={`flex-1 flex flex-col w-full`}>
@@ -80,12 +84,13 @@ const SideNav = ({ children }) => {
           ))}
         </div>
         <div className="flex items-center justify-center p-2 gap-3 cursor-pointer w-full hover:bg-violet-200 hover:text-black transition-colors duration-300" onClick={handleLogout}>
-          <div className="text-xl ">{logoutItem.icon}</div>
+          <div className="text-xl">{logoutItem.icon}</div>
           <div className={`${isOpen ? 'block' : 'hidden'}`}>{logoutItem.name}</div>
         </div>
       </div>
     </div>
   );
+
 };
 
 export default SideNav;

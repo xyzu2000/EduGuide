@@ -1,9 +1,9 @@
+import clsx from 'clsx';
 import { formatDistanceToNow } from "date-fns";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
 import { UserContext } from "../context/UserContext";
-
 
 const Message = ({ message, photoURL }) => {
   const { currentUser } = useContext(AuthContext);
@@ -52,12 +52,13 @@ const Message = ({ message, photoURL }) => {
   return (
     <div
       ref={ref}
-      className={`message ${message.senderId === currentUser.uid ? "own" : ""}`}
+      // className={`message ${message.senderId === currentUser.uid ? "own" : ""}`}
+      className={clsx('message', message.senderId === currentUser.uid && 'own')}
     >
       <div className="messageInfo">
         <img src={senderPhotoURL || basicUserImg} alt="" />
       </div>
-      <div className="texts">
+      <div className={clsx('texts', message.senderId === currentUser.uid ? 'items-end' : 'items-start')}>
         <p>
           {message.text || ''}
           {message.img && <img src={message.img} className="m-auto p-3" alt="" onClick={() => handleImageClick(message.img)} />}
@@ -70,7 +71,6 @@ const Message = ({ message, photoURL }) => {
     </div>
   );
 };
-
 const ImageModal = ({ imageUrl, closeModal }) => (
   <div
     className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 overflow-auto"
@@ -87,7 +87,7 @@ const ImageModal = ({ imageUrl, closeModal }) => (
         &times;
       </span>
       <img
-        className="object-cover w-full h-full"
+        className='object-contain'
         src={imageUrl}
         alt="Full size"
       />

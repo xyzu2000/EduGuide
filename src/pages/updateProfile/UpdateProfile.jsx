@@ -13,7 +13,7 @@ export const UpdateProfile = () => {
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
-
+    //dodac warunek kiedy puste ktores jest - dodac required (form) onSubmit
     useEffect(() => {
         if (currentUser) {
             setDisplayName(currentUser.displayName || '');

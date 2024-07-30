@@ -9,8 +9,6 @@ import { auth, db, provider } from '../../config/firebase'
 
 
 export const Login = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate()
 
@@ -44,9 +42,6 @@ export const Login = () => {
             setErrorMessage(message);
         }
     }
-
-    const handleEmailChange = (e) => { setEmail(e.target.value) }
-    const handlePasswordChange = (e) => { setPassword(e.target.value) }
 
     const handleSignInWithGoogle = async () => {
         try {
@@ -101,7 +96,6 @@ export const Login = () => {
                         </label>
                         <div className="mt-2">
                             <input
-                                onChange={handleEmailChange}
                                 id="email"
                                 name="email"
                                 type="email"
@@ -128,7 +122,6 @@ export const Login = () => {
                         </div>
                         <div className="mt-2">
                             <input
-                                onChange={handlePasswordChange}
                                 id="password"
                                 name="password"
                                 type="password"
