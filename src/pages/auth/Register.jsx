@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import logo from '../../assets/images/logo.svg';
-import userImg from "../../assets/images/user.png";
 import { auth, db } from '../../config/firebase';
 
 export const Register = () => {
@@ -13,23 +12,43 @@ export const Register = () => {
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+    const [avatar, setAvatar] = useState({
+        file: null,
+        url: "",
+    });
+
+
+    const handleAvatar = (e) => {
+        if (e.target.files[0]) {
+            setAvatar({
+                file: e.target.files[0],
+                url: URL.createObjectURL(e.target.files[0]),
+            });
+        }
+    };
 
     const handleSignUp = async (e) => {
         e.preventDefault();
-        console.log('displayName before submit: ', displayName);
 
         try {
             await createUserWithEmailAndPassword(auth, email, password);
             const user = auth.currentUser
             console.log('current user at Register: ', user)
             console.log("User registered successfully")
-
+            const userAvatar = avatar.file ? avatar : {
+                file: null,
+                url: "./avatar.png",
+            };
             if (user) {
                 await setDoc(doc(db, "users", user.uid), {
                     uid: user.uid,
                     displayName: displayName,
                     email: email,
-                    photoURL: userImg
+                    photoURL: userAvatar,
+                    blocked: []
+                });
+                await setDoc(doc(db, 'userChats', user.uid), {
+                    chats: []
                 });
             }
             toast.success("User registered successfully", { position: "top-center" })
@@ -61,18 +80,28 @@ export const Register = () => {
     const handlepasswordChange = (e) => { setPassword(e.target.value) }
 
     return (
-        <div className="flex min-h-[100vh] flex-col justify-center items-center px-6 py-12 lg:px-8">
+        <div className="flex min-h-[100vh] flex-col justify-center items-center px-6 py-12 lg:px-8 ">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <img className="mx-auto h-16 w-auto" src={logo} />
-                <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Register a new account</h2>
+                <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-slate-200">Register a new account</h2>
             </div>
 
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border-2 rounded-md p-8 shadow-2xl">
+            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border-2 rounded-md p-8 shadow-2xl backdrop-blur-md">
                 <form className="space-y-6" onSubmit={handleSignUp}>
+                    <label htmlFor="file" className='flex justify-center items-center cursor-pointer'>
+                        <img src={avatar.url || "./avatar.png"} alt="" className='w-[40px] rounded-xl border-violet-600 border-2 ' />
+                        <p className='m-2 text-white'>Upload an image</p>
+                    </label>
+                    <input
+                        type="file"
+                        id="file"
+                        style={{ display: "none" }}
+                        onChange={handleAvatar}
+                    />
                     <div>
                         <label
                             htmlFor="email"
-                            className="block text-sm font-medium leading-6 text-gray-900">
+                            className="block text-sm font-medium leading-6 text-slate-200">
                             Email address
                         </label>
                         <div className="mt-2">
@@ -89,7 +118,7 @@ export const Register = () => {
                     <div>
                         <label
                             htmlFor="displayName"
-                            className="block text-sm font-medium leading-6 text-gray-900">
+                            className="block text-sm font-medium leading-6 text-slate-200">
                             Display name
                         </label>
                         <div className="mt-2">
@@ -108,7 +137,7 @@ export const Register = () => {
                         <div className="flex items-center justify-between">
                             <label
                                 htmlFor="password"
-                                className="block text-sm font-medium leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-slate-200">
                                 Password
                             </label>
                         </div>
@@ -133,7 +162,7 @@ export const Register = () => {
                 </form>
             </div>
 
-            <p className="mt-10 text-center text-sm text-gray-500">
+            <p className="mt-10 text-center text-sm text-gray-400">
                 Already a member?
                 <Link
                     to="/"

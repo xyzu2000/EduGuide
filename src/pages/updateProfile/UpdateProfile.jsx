@@ -2,9 +2,9 @@ import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 
 import { doc, updateDoc } from 'firebase/firestore';
 import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import basicUserImg from '../../assets/images/user.png';
 import { auth, db } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
-
 export const UpdateProfile = () => {
     const { currentUser, refreshUserData } = useContext(AuthContext);
     const [displayName, setDisplayName] = useState('');
@@ -17,7 +17,7 @@ export const UpdateProfile = () => {
     useEffect(() => {
         if (currentUser) {
             setDisplayName(currentUser.displayName || '');
-            setPhotoURL(currentUser.photoURL || '');
+            setPhotoURL(currentUser.photoURL || basicUserImg);
         }
     }, [currentUser]);
 
@@ -73,9 +73,11 @@ export const UpdateProfile = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen">
-            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8 w-full max-w-2xl">
-                <h1 className="text-2xl font-bold mb-4 text-center">Update Profile</h1>
+        <div className="flex justify-center items-center min-h-screen min-w-full p-5">
+            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8 w-full max-w-5xl">
+                <h1 className="text-2xl font-bold mb-4 text-center inline-block bg-violet-400 p-4 rounded-xl">
+                    Update Profile
+                </h1>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="displayName">
                         Display Name
@@ -116,7 +118,9 @@ export const UpdateProfile = () => {
                 </div>
                 {currentUser && currentUser.providerData[0].providerId === 'password' && (
                     <>
-                        <h2 className="text-xl font-bold mt-6 mb-4 text-center">Change Password</h2>
+                        <h2 className="text-xl font-bold mt-6 mb-4 text-center inline-block bg-violet-400 p-4 rounded-xl">
+                            Change Password
+                        </h2>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                                 Current Password
@@ -172,6 +176,9 @@ export const UpdateProfile = () => {
             </div>
         </div>
     );
+
+
+
 };
 
 export default UpdateProfile;

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { FaBell, FaCalendarAlt, FaComments, FaHistory, FaRobot, FaUserFriends } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import basicUserImg from "../../assets/images/user.png";
 import { AuthContext } from '../../context/AuthContext';
 
 export const LoggedPage = () => {
@@ -14,11 +15,11 @@ export const LoggedPage = () => {
         { id: 'activity', name: 'Ostatnie aktywności', path: '/activity', icon: <FaHistory />, description: 'Śledź swoje ostatnie aktywności' }
     ];
     return (
-        <div className='min-h-[100vh] w-full flex flex-col items-center justify-center p-5'>
+        <div className='min-h-[100vh] w-full flex flex-col items-center justify-center p-5 text-white'>
             <div className='border-2 border-blue-300 p-5 m-2 rounded-md w-full max-w-lg text-center'>
                 <h1 className='text-2xl mb-4'>Witaj, {currentUser.displayName}!</h1>
                 <img
-                    src={currentUser.photoURL}
+                    src={currentUser.photoURL || basicUserImg}
                     alt="Profile"
                     className='w-32 h-32 rounded-full mx-auto mb-4'
                 />

@@ -59,13 +59,13 @@ const NewPassword = () => {
         <div className="flex min-h-[100vh] flex-col justify-center items-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <img className="mx-auto h-16 w-auto" src={logo} alt="Logo" />
-                <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Remind password</h2>
+                <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-white">Remind password</h2>
             </div>
 
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border-2 rounded-md p-8 shadow-2xl">
+            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border-2 rounded-md p-8 shadow-2xl backdrop-blur-md">
                 <form className="space-y-6" onSubmit={handleResetPassword}>
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                        <label htmlFor="email" className="block text-sm font-medium leading-6 text-white">
                             Email address
                         </label>
                         <div className="mt-2">
@@ -93,7 +93,7 @@ const NewPassword = () => {
                 </form>
             </div>
 
-            <p className="mt-10 text-center text-sm text-gray-500">
+            <p className="mt-10 text-center text-sm text-gray-400">
                 Already a member?
                 <Link to="/" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
                     Sign in

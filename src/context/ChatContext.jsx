@@ -13,6 +13,10 @@ export const ChatContextProvider = ({ children }) => {
   const chatReducer = (state, action) => {
     switch (action.type) {
       case 'CHANGE_USER':
+        if (!currentUser || !action.payload || !currentUser.uid || !action.payload.uid) {
+          console.error("Invalid user data");
+          return state;
+        }
         const newState = {
           user: action.payload,
           chatId:
@@ -23,9 +27,11 @@ export const ChatContextProvider = ({ children }) => {
         console.log("Updated chat state:", newState);
         return newState;
       default:
+        console.error("Unhandled action type: ", action.type);
         return state;
     }
   };
+
 
   const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE);
 
@@ -35,3 +41,4 @@ export const ChatContextProvider = ({ children }) => {
     </ChatContext.Provider>
   );
 };
+

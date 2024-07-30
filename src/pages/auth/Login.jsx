@@ -64,6 +64,12 @@ export const Login = () => {
                         photoURL: user.photoURL
                     });
                 }
+
+                const userChatsDocRef = doc(db, 'userChats', user.uid);
+                const userChatsDocSnap = await getDoc(userChatsDocRef);
+                if (!userChatsDocSnap.exists()) {
+                    await setDoc(userChatsDocRef, {});
+                }
             }
             toast.success("Logged with Google", { position: "top-center" });
             navigate("/logged");
@@ -80,17 +86,17 @@ export const Login = () => {
                     className="mx-auto h-16 w-auto"
                     src={logo} />
                 <h2
-                    className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                    className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-white">
                     Sign in to your account
                 </h2>
             </div>
 
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border-2 rounded-md p-8 shadow-2xl">
+            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border-2 rounded-md p-8 shadow-2xl backdrop-blur-md">
                 <form className="space-y-6" onSubmit={handleSignIn}>
                     <div>
                         <label
                             htmlFor="email"
-                            className="block text-sm font-medium leading-6 text-gray-900">
+                            className="block text-sm font-medium leading-6 text-white">
                             Email address
                         </label>
                         <div className="mt-2">
@@ -109,7 +115,7 @@ export const Login = () => {
                         <div className="flex items-center justify-between">
                             <label
                                 htmlFor="password"
-                                className="block text-sm font-medium leading-6 text-gray-900">
+                                className="block text-sm font-medium leading-6 text-white">
                                 Password
                             </label>
                             <div className="text-sm">
@@ -142,7 +148,7 @@ export const Login = () => {
                     </div>
                 </form>
 
-                <label className="block text-center my-4 text-sm font-medium leading-6 text-gray-900">Or</label>
+                <label className="block text-center my-4 text-sm font-medium leading-6 text-white">Or</label>
                 <div className="flex justify-center">
                     <div className="max-w-[240px] m-auto py-2" >
                         <GoogleButton onClick={handleSignInWithGoogle} />
@@ -150,7 +156,7 @@ export const Login = () => {
                 </div>
             </div>
 
-            <p className="mt-10 text-center text-sm text-gray-500">
+            <p className="mt-10 text-center text-sm text-gray-400">
                 Not a member?
                 <Link
                     to="/register"

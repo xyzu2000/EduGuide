@@ -2,6 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-    background: rgb(154, 153, 212);
-}
+
+* {
+    margin: 0;
+    padding: 0;
+      /* Stylizacja scrollbar */
+  &::-webkit-scrollbar {
+    width: 8px; /* Szerokość paska przewijania */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(17, 25, 40, 0.5); /* Tło ścieżki paska przewijania */
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.5); /* Kolor paska przewijania */
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.7); /* Kolor paska przewijania podczas najechania */
+  }
+    box-sizing: border-box;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  }
+  
+  body {
+    background-image: url("/src/assets/images/bg.jpg");
+  }

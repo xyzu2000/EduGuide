@@ -1,25 +1,29 @@
-import styles from "../../assets/css/Input.module.css";
 
 export default function Input({ value, onChange, onEnter }) {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      onEnter(); // Wywołaj funkcję przekazaną jako prop onEnter po naciśnięciu "Enter"
+      onEnter();
     }
   };
 
   return (
-    <div className={styles.wrapper}>
+    <div className="flex h-15 bg-slate-800 rounded-xl overflow-hidden">
       <input
-        className={styles.text}
+        className="flex-1 border-none outline-none p-5 text-white text-lg bg-transparent"
         placeholder="Your prompt here..."
         value={value}
         onChange={onChange}
-        onKeyDown={handleKeyDown} // Dodane: Obsługa zdarzenia onKeyDown
+        onKeyDown={handleKeyDown}
       />
-      <button className={styles.btn} onClick={onEnter}>
+      <button
+        className="flex-none w-20 text-lg font-bold bg-violet-700 hover:bg-violet-950 cursor-pointer"
+        onClick={onEnter}
+      >
         Go
       </button>
     </div>
   );
+
+
 }
 

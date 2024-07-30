@@ -1,15 +1,11 @@
-import { useContext, useEffect, useState } from 'react';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import React, { useContext, useEffect, useState } from 'react';
+import { db } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
 import Clear from './Clear';
 import History from './History';
 import Input from './Input';
 import Message from './Message';
-
-import '../../assets/css/App.css';
-
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import React from 'react';
-import { db } from '../../config/firebase';
 
 export const ChatBot = () => {
   const [input, setInput] = useState('');
@@ -96,11 +92,12 @@ export const ChatBot = () => {
     return <p>Loading...</p>;
   }
 
-  return (
-    <div className="App">
-      <div className="Column">
-        <h3 className="Title">Chat Messages</h3>
-        <div className="Content">
+  return (<>
+
+    <div className="grid grid-cols-7 gap-5 max-w-screen-lg m-auto p-5">
+      <div className="col-span-5 flex flex-col text-white bg-gray-900 p-5 rounded-xl h-[95vh]">
+        <h3 className=" mb-5 text-xl font-bold bg-violet-400 p-4 rounded-xl">Chat Messages</h3>
+        <div className=" flex-1 mb-5 overflow-auto">
           {messages.map((el, i) => (
             <Message key={i} role={el.role} content={el.content} />
           ))}
@@ -112,9 +109,9 @@ export const ChatBot = () => {
           onEnter={input ? handleSubmit : undefined}
         />
       </div>
-      <div className="Column">
-        <h3 className="Title">History</h3>
-        <div className="Content">
+      <div className="col-span-2 flex flex-col text-white bg-gray-900 p-5 rounded-xl">
+        <h3 className=" mb-5 text-xl font-bold bg-violet-400 p-4 rounded-xl">History</h3>
+        <div className=" flex-1 mb-5">
           {history.map((el, i) => (
             <History
               key={i}
@@ -131,7 +128,10 @@ export const ChatBot = () => {
         <Clear onClick={clear} />
       </div>
     </div>
+  </>
   );
+
+
 };
 
 export default ChatBot;
