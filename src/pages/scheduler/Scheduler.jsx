@@ -3,18 +3,18 @@ import moment from 'moment';
 import React, { useContext, useEffect, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { FaInfoCircle } from 'react-icons/fa';
 import '../../assets/css/Scheduler.css';
-import Button from '../../components/basics/Button';
+import Button from "../../components/basics/Button";
+import LoadingSpinner from '../../components/loadingPage/LoadingSpinner';
 import { db } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
-import LoadingSpinner from '../../components/loadingPage/LoadingSpinner';
+import CustomEvent from './CustomEvent'; // Importuj niestandardowy komponent
+
 const localizer = momentLocalizer(moment);
 
 export const Scheduler = () => {
   const [events, setEvents] = useState([]);
   const { currentUser } = useContext(AuthContext);
-  const [showLegend, setShowLegend] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -23,7 +23,6 @@ export const Scheduler = () => {
   const [newStart, setNewStart] = useState(null);
   const [newEnd, setNewEnd] = useState(null);
 
-  const toggleLegend = () => setShowLegend(!showLegend);
 
   useEffect(() => {
     const fetchUserEvents = async () => {
@@ -121,9 +120,13 @@ export const Scheduler = () => {
     }
   };
 
-  const handleContextMenu = (event, calEvent) => {
-    event.preventDefault();
-    handleDeleteEvent(calEvent);
+
+  const handleEdit = (event) => {
+    setEventTitle(event.title);
+    setSelectedEvent(event);
+    setNewStart(event.start);
+    setNewEnd(event.end);
+    setShowEditModal(true);
   };
 
   if (!currentUser) {
@@ -135,9 +138,6 @@ export const Scheduler = () => {
       <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8 w-full max-w-4xl mb-8">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-center flex-1">Scheduler</h1>
-          <Button onClick={toggleLegend}>
-            <FaInfoCircle className="mr-2" /> Info
-          </Button>
         </div>
         <Calendar
           localizer={localizer}
@@ -149,34 +149,13 @@ export const Scheduler = () => {
           onSelectSlot={handleSelectSlot}
           onSelectEvent={handleSelectEvent}
           components={{
-            eventWrapper: ({ event, children }) => (
-              <div onContextMenu={(e) => handleContextMenu(e, event)}>
-                {children}
-              </div>
+            event: ({ event }) => (
+              <CustomEvent event={event} handleEdit={handleEdit} handleDelete={handleDeleteEvent} />
             ),
           }}
-          className="rbc-calendar "
+          className="rbc-calendar"
         />
       </div>
-
-      {showLegend && (
-        <div className="fixed inset-0 pl-[148px] bg-black bg-opacity-50 flex justify-center items-center z-10">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Legenda</h2>
-            <ul className="list-disc pl-5 mb-4">
-              <li>Aby dodać wydarzenie, kliknij lub przeciągnij na kalendarzu</li>
-              <li>Aby usunąć wydarzenie, kliknij na nie prawym przyciskiem myszy</li>
-              <li>Aby edytować nazwę wydarzenia, kliknij na nie lewym przyciskiem myszy</li>
-            </ul>
-            <button
-              onClick={toggleLegend}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-              Zamknij
-            </button>
-          </div>
-        </div>
-      )}
 
       {showEventModal && (
         <div className="fixed inset-0 pl-[148px] bg-black bg-opacity-50 flex justify-center items-center z-10">
@@ -189,18 +168,17 @@ export const Scheduler = () => {
               onChange={(e) => setEventTitle(e.target.value)}
               placeholder="Nazwa Wydarzenia"
             />
-            <button
+            <Button
               onClick={saveEvent}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+              className='mr-2'
             >
               Zapisz
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => setShowEventModal(false)}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Anuluj
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -230,18 +208,17 @@ export const Scheduler = () => {
               value={newEnd ? moment(newEnd).format('YYYY-MM-DDTHH:mm') : ''}
               onChange={(e) => setNewEnd(new Date(e.target.value))}
             />
-            <button
+            <Button
               onClick={updateEvent}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+              className='mr-2'
             >
               Zapisz
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => setShowEditModal(false)}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Anuluj
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -251,18 +228,17 @@ export const Scheduler = () => {
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Usuń Wydarzenie</h2>
             <p className="mb-4">Czy na pewno chcesz usunąć wydarzenie '{selectedEvent?.title}'?</p>
-            <button
+            <Button
               onClick={confirmDeleteEvent}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+              className='mr-2'
             >
               Tak
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => setShowDeleteModal(false)}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Nie
-            </button>
+            </Button>
           </div>
         </div>
       )}
