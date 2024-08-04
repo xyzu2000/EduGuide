@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
+import { CiEdit, CiVideoOn } from "react-icons/ci";
+import { IoIosMore } from "react-icons/io";
 import { AuthContext } from "../../../context/AuthContext";
 import "./userInfo.css";
+
 const UserInfo = () => {
     const { currentUser } = useContext(AuthContext);
 
@@ -11,9 +14,9 @@ const UserInfo = () => {
                 <h2>{currentUser.displayName}</h2>
             </div>
             <div className="icons">
-                <img src="./more.png" alt="" />
-                <img src="./video.png" alt="" />
-                <img src="./edit.png" alt="" />
+                <IoIosMore />
+                <CiVideoOn />
+                <CiEdit />
             </div>
 
         </div>

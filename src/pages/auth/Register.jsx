@@ -3,7 +3,9 @@ import { doc, setDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import logo from '../../assets/images/logo.svg';
+import AuthTitle from '../../components/basics/AuthTitle';
+import Button from '../../components/basics/Button';
+import InputField from '../../components/basics/InputField';
 import { auth, db } from '../../config/firebase';
 
 export const Register = () => {
@@ -18,6 +20,8 @@ export const Register = () => {
         if (e.target.files[0]) {
             const file = e.target.files[0];
             const reader = new FileReader();
+
+            //todo: dodać sprawdzenie czy jest to plik graficzny i czy nie jest za duży jesli jest błąd to wyświetlic powiadomenie
 
             reader.onloadend = () => {
                 setAvatar(reader.result);
@@ -48,7 +52,7 @@ export const Register = () => {
                 });
             }
             toast.success('User registered successfully', { position: 'top-center' });
-            navigate('/logged');
+            navigate('/dashboard');
         } catch (error) {
             console.error('Error registering user:', error);
             let message = '';
@@ -72,121 +76,108 @@ export const Register = () => {
         }
     };
 
-    const handleemailChange = (e) => {
+    const handleEmailChange = (e) => {
         setEmail(e.target.value);
     };
     const handleDisplayNameChange = (e) => {
         setDisplayName(e.target.value);
         console.log('displayName:', displayName);
     };
-    const handlepasswordChange = (e) => {
+    const handlePasswordChange = (e) => {
         setPassword(e.target.value);
     };
 
     return (
         <div className="flex min-h-[100vh] flex-col justify-center items-center px-6 py-12 lg:px-8 ">
-            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                <img className="mx-auto h-16 w-auto" src={logo} />
-                <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-slate-200">
-                    Register a new account
-                </h2>
-            </div>
-
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border-2 rounded-md p-8 shadow-2xl backdrop-blur-md">
+            <div className="p-4 lg:p-8 bg-zinc-100 rounded-lg mt-8 w-full md:max-w-[600px]">
+                <AuthTitle title="Register a new account" />
                 <form className="space-y-6" onSubmit={handleSignUp}>
-                    <label
-                        htmlFor="file"
-                        className="flex justify-center items-center cursor-pointer"
-                    >
-                        <img
-                            src={avatar}
-                            alt=""
-                            className="w-[40px] rounded-xl border-violet-600 border-2 "
-                        />
-                        <p className="m-2 text-white">Upload an image</p>
-                    </label>
-                    <input
-                        type="file"
-                        id="file"
-                        style={{ display: 'none' }}
-                        onChange={handleAvatar}
+                    <div>
+                        <span className="block text-sm font-medium leading-6 ">Avatar</span>
+                        <label
+                            for="dropzone-file"
+                            class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100 "
+                        >
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                {avatar ? (
+                                    <img
+                                        src={avatar}
+                                        alt=""
+                                        className="w-32 h-32 rounded-full border-indigo-800 border-1"
+                                    />
+                                ) : (
+                                    <>
+                                        <svg
+                                            class="w-10 h-10 mb-3 text-gray-400"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                            ></path>
+                                        </svg>
+                                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                            <span class="font-semibold">Klinij aby dodać</span> lub
+                                            przenieś plik i upuść go.
+                                        </p>
+                                    </>
+                                )}
+                            </div>
+                            <input
+                                id="dropzone-file"
+                                type="file"
+                                class="hidden"
+                                onChange={handleAvatar}
+                            />
+                        </label>
+                    </div>
+
+                    <InputField
+                        id="email"
+                        onChange={handleEmailChange}
+                        name="email"
+                        type="email"
+                        label="Email"
+                        placeholder="Enter email"
+                        autoComplete="email"
+                        required
                     />
-                    <div>
-                        <label
-                            htmlFor="email"
-                            className="block text-sm font-medium leading-6 text-slate-200"
-                        >
-                            Email address
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                id="email"
-                                onChange={handleemailChange}
-                                name="email"
-                                type="email"
-                                autoComplete="email"
-                                required
-                                className="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
+                    <InputField
+                        id="displayName"
+                        onChange={handleDisplayNameChange}
+                        name="displayName"
+                        type="text"
+                        autoComplete="displayName"
+                        required
+                        label="Display name"
+                        placeholder="Enter display name"
+                    />
 
-                    <div>
-                        <label
-                            htmlFor="displayName"
-                            className="block text-sm font-medium leading-6 text-slate-200"
-                        >
-                            Display name
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                id="displayName"
-                                onChange={handleDisplayNameChange}
-                                name="displayName"
-                                type="text"
-                                autoComplete="displayName"
-                                required
-                                className="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <label
-                                htmlFor="password"
-                                className="block text-sm font-medium leading-6 text-slate-200"
-                            >
-                                Password
-                            </label>
-                        </div>
-                        <div className="mt-2">
-                            <input
-                                id="password"
-                                onChange={handlepasswordChange}
-                                name="password"
-                                type="password"
-                                autoComplete="current-password"
-                                required
-                                className="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
+                    <InputField
+                        id="password"
+                        onChange={handlePasswordChange}
+                        name="password"
+                        type="password"
+                        autoComplete="current-password"
+                        required
+                        label="Password"
+                        placeholder="Enter password"
+                    />
                     {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-
                     <div>
-                        <button
-                            type="submit"
-                            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        >
+                        <Button type="submit" className="w-full">
                             Register
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </div>
-
             <p className="mt-10 text-center text-sm text-gray-400">
-                Already a member?
+                Already a member?{' '}
                 <Link
                     to="/"
                     className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"

@@ -1,16 +1,16 @@
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
-import { doc, getDoc, setDoc } from "firebase/firestore"
-import { useState } from "react"
-import { GoogleButton } from 'react-google-button'
-import { Link, useNavigate } from "react-router-dom"
-import { toast } from "react-toastify"
-import logo from '../../assets/images/logo.svg'
-import { auth, db, provider } from '../../config/firebase'
-
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { useState } from 'react';
+import GoogleButton from 'react-google-button';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import AuthTitle from '../../components/basics/AuthTitle';
+import Button from '../../components/basics/Button';
+import InputField from '../../components/basics/InputField';
+import { auth, getFirebaseAuthErrorMessage } from '../../config/firebase';
 
 export const Login = () => {
     const [errorMessage, setErrorMessage] = useState('');
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const handleSignIn = async (e) => {
         e.preventDefault();
@@ -19,44 +19,30 @@ export const Login = () => {
 
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            toast.success("User login successfull", { position: "top-center" })
-            navigate("/logged");
+            toast.success('User login successfull');
+            navigate('/dashboard');
             e.target.reset();
         } catch (error) {
-            console.error("Error signing in:", error);
-            let message = '';
-            switch (error.code) {
-                case 'auth/invalid-email':
-                    message = 'Invalid email address.';
-                    break;
-                case 'auth/user-not-found':
-                    message = 'User not found. Please check your email.';
-                    break;
-                case 'auth/wrong-password':
-                    message = 'Incorrect password. Please try again.';
-                    break;
-                default:
-                    message = 'An error occurred. Please try again later.';
-            }
-            toast.error(message, { position: "bottom-center" })
+            const message = getFirebaseAuthErrorMessage(error);
+            toast.error(message);
             setErrorMessage(message);
         }
-    }
+    };
 
     const handleSignInWithGoogle = async () => {
+        const provider = new GoogleAuthProvider();
         try {
             await signInWithPopup(auth, provider);
             const user = auth.currentUser;
-            console.log("user:", user.uid, ",", user.email, ",", user.displayName, ",", user.photoURL);
             if (user) {
-                const userDocRef = doc(db, "users", user.uid);
+                const userDocRef = doc(db, 'users', user.uid);
                 const userDocSnap = await getDoc(userDocRef);
                 if (!userDocSnap.exists()) {
                     await setDoc(userDocRef, {
                         uid: user.uid,
                         displayName: user.displayName,
                         email: user.email,
-                        photoURL: user.photoURL
+                        photoURL: user.photoURL,
                     });
                 }
 
@@ -65,98 +51,75 @@ export const Login = () => {
                 if (!userChatsDocSnap.exists()) {
                     await setDoc(userChatsDocRef, {});
                 }
+                toast.success('Logged in with Google');
+                navigate('/dashboard');
             }
-            toast.success("Logged with Google", { position: "top-center" });
-            navigate("/logged");
         } catch (error) {
-            toast.error(error.message, { position: "bottom-center" });
+            const errorMessage = getFirebaseAuthErrorMessage(error);
+            toast.error(errorMessage);
         }
     };
 
 
     return (
         <div className="flex min-h-[100vh] flex-col justify-center items-center px-6 py-12 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                <img
-                    className="mx-auto h-16 w-auto"
-                    src={logo} />
-                <h2
-                    className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-white">
-                    Sign in to your account
-                </h2>
-            </div>
-
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm border-2 rounded-md p-8 shadow-2xl backdrop-blur-md">
-                <form className="space-y-6" onSubmit={handleSignIn}>
-                    <div>
-                        <label
-                            htmlFor="email"
-                            className="block text-sm font-medium leading-6 text-white">
-                            Email address
-                        </label>
-                        <div className="mt-2">
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                autoComplete="email"
-                                required
-                                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-                        </div>
-                    </div>
-
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <label
-                                htmlFor="password"
-                                className="block text-sm font-medium leading-6 text-white">
-                                Password
-                            </label>
-                            <div className="text-sm">
-                                <Link
-                                    to="/new-password"
-                                    className="font-semibold text-indigo-600 hover:text-indigo-500">
-                                    Forgot password?
-                                </Link>
-                            </div>
-                        </div>
-                        <div className="mt-2">
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                autoComplete="current-password"
-                                required
-                                className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-                        </div>
-                    </div>
+            <div className="px-4 py-12 lg:px-8 bg-zinc-100 rounded-lg mt-8 w-full md:max-w-[500px]">
+                <AuthTitle title="Sign in to your account" />
+                <form className="space-y-4" onSubmit={handleSignIn}>
+                    <InputField
+                        id="email"
+                        name="email"
+                        type="email"
+                        label="Email"
+                        placeholder="Enter email"
+                        autoComplete="email"
+                        required
+                    />
+                    <InputField
+                        id="password"
+                        name="password"
+                        type="password"
+                        label="Password"
+                        placeholder="Enter password"
+                        autoComplete="current-password"
+                        required
+                    />
+                    <Link
+                        to="/new-password"
+                        className=" text-zinc-600 hover:text-indigo-500 text-xs"
+                    >
+                        Forgot password?
+                    </Link>
                     {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
                     <div>
-                        <button
-                            type="submit"
-                            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        <Button type="submit" className="w-full">
                             Sign in
-                        </button>
+                        </Button>
                     </div>
                 </form>
-
-                <label className="block text-center my-4 text-sm font-medium leading-6 text-white">Or</label>
-                <div className="flex justify-center">
-                    <div className="max-w-[240px] m-auto py-2" >
-                        <GoogleButton onClick={handleSignInWithGoogle} />
-                    </div>
-                </div>
+                <span className="block text-center my-2 text-sm font-medium leading-6 ">
+                    Or
+                </span>
+                {/* //todo: mozna stworzyc custom button zeby passowal wygladem i uzyc tej funkcji handleSignInWithGoogle */}
+                <GoogleButton
+                    onClick={handleSignInWithGoogle}
+                    style={{
+                        width: '100%',
+                        borderRadius: '0.375rem',
+                        overflow: 'hidden',
+                    }}
+                />
             </div>
-
             <p className="mt-10 text-center text-sm text-gray-400">
-                Not a member?
+                Not a member?{' '}
                 <Link
                     to="/register"
-                    className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+                    className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                >
                     Register now
                 </Link>
             </p>
         </div>
-    )
-}
+    );
+};

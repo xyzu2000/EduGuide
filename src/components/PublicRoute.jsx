@@ -22,11 +22,14 @@ const PublicRoute = () => {
     }
 
     if (currentUser) {
-        return <Navigate to="/logged" />;
+        return <Navigate to="/dashboard" />;
     }
 
-    return <Outlet />;
+    return (
+        <div className="bg-[url('./background.png')] bg-cover bg-no-repeat">
+            <Outlet />
+        </div>
+    );
 };
-
 
 export default PublicRoute;

@@ -16,6 +16,7 @@
     "date-fns": "^3.6.0",
     "emoji-picker-react": "^4.11.1",
     "firebase": "^10.12.0",
+    "framer-motion": "^11.3.21",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
     "moment": "^2.30.1",

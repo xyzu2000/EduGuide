@@ -1,13 +1,17 @@
 .chatList {
     flex: 1;
     overflow: auto;
-
+    color:black;
+    
     .lastMsg{
       display: inline-block;
-      max-width: 200px; /* lub inna odpowiednia szerokość */
+      max-width: 200px; 
+      max-height: 24px; 
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      font-size: small;
+      color:grey
     }
     
     .search {
@@ -18,7 +22,7 @@
   
       .searchBar {
         flex: 1;
-        background-color: rgba(17, 25, 40, 0.5);
+        background-color: #4f46e5;
         display: flex;
         align-items: center;
         gap: 20px;
@@ -42,7 +46,7 @@
       .add {
         width: 36px;
         height: 36px;
-        background-color: rgba(17, 25, 40, 0.5);
+        background-color: #4f46e5;
         padding: 10px;
         border-radius: 10px;
         cursor: pointer;
@@ -70,12 +74,12 @@
         gap: 10px;
   
         span {
-          font-weight: 500;
+          font-weight: bold
         }
   
         p {
           font-size: 14px;
-          font-weight: 300;
+          font-weight: 200;
         }
       }
     }

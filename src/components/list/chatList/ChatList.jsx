@@ -79,7 +79,7 @@ const ChatList = () => {
             )}
 
             {/* {addMode && <AddUser />} */}
-            {addMode && <UsersList handleModal={handleAddMode} modal={addMode} />}
+            {addMode && <UsersList handleModal={handleAddMode} buttonLabel={`Przejdz do czatu`} modal={addMode} />}
         </div>
     );
 };
@@ -98,7 +98,7 @@ const ChatListItem = ({ chatData, handleSelect, getUserPhotoURL }) => {
 
     return (
         <div
-            className="item"
+            className="item hover:bg-indigo-500 transition-colors duration-300"
             onClick={() => handleSelect(chatData.userInfo)}
         >
             <img
@@ -107,7 +107,9 @@ const ChatListItem = ({ chatData, handleSelect, getUserPhotoURL }) => {
             />
             <div className="texts">
                 <span>{chatData.userInfo?.displayName || 'Nieznany użytkownik'}</span>
-                <p className='lastMsg'>{chatData.lastMessage?.text || 'Brak wiadomości'}</p>
+                <div
+                    className='lastMsg'
+                    dangerouslySetInnerHTML={{ __html: chatData.lastMessage?.text.substring(0, 50) } || 'Brak wiadomości'} />
             </div>
         </div>
     );

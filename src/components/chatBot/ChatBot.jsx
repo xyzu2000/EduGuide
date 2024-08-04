@@ -1,7 +1,8 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { db } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
+import LoadingSpinner from '../loadingPage/LoadingSpinner';
 import Clear from './Clear';
 import History from './History';
 import Input from './Input';
@@ -11,7 +12,14 @@ export const ChatBot = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [history, setHistory] = useState([]);
+  const [prevMessages, setPrevMessages] = useState([]);
   const { currentUser } = useContext(AuthContext);
+  const ref = useRef();
+  const [modal, setModal] = useState(false);
+
+  useEffect(() => {
+    ref.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   useEffect(() => {
     if (currentUser) {
@@ -36,6 +44,7 @@ export const ChatBot = () => {
     };
 
     const updatedMessages = [...messages, prompt];
+    setPrevMessages(messages); // Save the current state before updating
     setMessages(updatedMessages);
 
     try {
@@ -88,50 +97,56 @@ export const ChatBot = () => {
     }
   };
 
+  const handleHistoryClick = (question, answer) => {
+    setPrevMessages(messages); // Save current state before switching to history
+    setMessages([
+      { role: 'user', content: question },
+      { role: 'assistant', content: answer },
+    ]);
+  };
+
+
   if (!currentUser) {
-    return <p>Loading...</p>;
+    return <LoadingSpinner />
   }
 
-  return (<>
-
-    <div className="grid grid-cols-7 gap-5 max-w-screen-lg m-auto p-5">
-      <div className="col-span-5 flex flex-col text-white bg-gray-900 p-5 rounded-xl h-[95vh]">
-        <h3 className=" mb-5 text-xl font-bold bg-violet-400 p-4 rounded-xl">Chat Messages</h3>
-        <div className=" flex-1 mb-5 overflow-auto">
-          {messages.map((el, i) => (
-            <Message key={i} role={el.role} content={el.content} />
-          ))}
+  return (
+    <>
+      <div className="grid grid-cols-7 gap-2 h-[83vh]">
+        <div className="col-span-5 flex flex-col text-white bg-background-chatLight dark:bg-background-chatDark p-5 rounded-xl">
+          <h3 className=" mb-5 text-xl font-bold bg-indigo-600 p-4 rounded-xl">Chat Messages</h3>
+          <div className=" flex-1 mb-5 overflow-auto max-h-[66vh]">
+            {messages.map((el, i) => (
+              <Message key={i} role={el.role} content={el.content} />
+            ))}
+            <div ref={ref}></div>
+          </div>
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onClick={input ? handleSubmit : undefined}
+            onEnter={input ? handleSubmit : undefined}
+          />
         </div>
-        <Input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onClick={input ? handleSubmit : undefined}
-          onEnter={input ? handleSubmit : undefined}
-        />
-      </div>
-      <div className="col-span-2 flex flex-col text-white bg-gray-900 p-5 rounded-xl">
-        <h3 className=" mb-5 text-xl font-bold bg-violet-400 p-4 rounded-xl">History</h3>
-        <div className=" flex-1 mb-5">
-          {history.map((el, i) => (
-            <History
-              key={i}
-              question={el.question}
-              onClick={() =>
-                setMessages([
-                  { role: 'user', content: history[i].question },
-                  { role: 'assistant', content: history[i].answer },
-                ])
-              }
-            />
-          ))}
+        <div className="col-span-2 flex flex-col text-white bg-background-chatLight dark:bg-background-chatDark p-5 rounded-xl">
+          <h3 className=" mb-5 text-xl font-bold bg-indigo-600 p-4 rounded-xl">History</h3>
+          <div className=" flex-1 mb-5">
+            {history.map((el, i) => (
+              <History
+                key={i}
+                setModal={setModal}
+                modal={modal}
+                question={el.question}
+                answer={el.answer}
+                onClick={() => handleHistoryClick(el.question, el.answer)}
+              />
+            ))}
+          </div>
+          <Clear onClick={clear} />
         </div>
-        <Clear onClick={clear} />
       </div>
-    </div>
-  </>
+    </>
   );
-
-
 };
 
 export default ChatBot;

@@ -5,9 +5,10 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { FaInfoCircle } from 'react-icons/fa';
 import '../../assets/css/Scheduler.css';
+import Button from '../../components/basics/Button';
 import { db } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
-
+import LoadingSpinner from '../../components/loadingPage/LoadingSpinner';
 const localizer = momentLocalizer(moment);
 
 export const Scheduler = () => {
@@ -126,20 +127,17 @@ export const Scheduler = () => {
   };
 
   if (!currentUser) {
-    return <p className="text-center mt-10">Loading...</p>;
+    return <LoadingSpinner />
   }
 
   return (
-    <div className="Scheduler text-violet-700 flex flex-col justify-center items-center min-h-screen">
+    <div className="text-violet-700 flex flex-col justify-center items-center">
       <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8 w-full max-w-4xl mb-8">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-center flex-1">Scheduler</h1>
-          <button
-            onClick={toggleLegend}
-            className="flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
+          <Button onClick={toggleLegend}>
             <FaInfoCircle className="mr-2" /> Info
-          </button>
+          </Button>
         </div>
         <Calendar
           localizer={localizer}
@@ -157,12 +155,12 @@ export const Scheduler = () => {
               </div>
             ),
           }}
-          className="rbc-calendar"
+          className="rbc-calendar "
         />
       </div>
 
       {showLegend && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
+        <div className="fixed inset-0 pl-[148px] bg-black bg-opacity-50 flex justify-center items-center z-10">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Legenda</h2>
             <ul className="list-disc pl-5 mb-4">
@@ -181,7 +179,7 @@ export const Scheduler = () => {
       )}
 
       {showEventModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
+        <div className="fixed inset-0 pl-[148px] bg-black bg-opacity-50 flex justify-center items-center z-10">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Dodaj Nowe Wydarzenie</h2>
             <input
@@ -208,7 +206,7 @@ export const Scheduler = () => {
       )}
 
       {showEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
+        <div className="fixed inset-0 pl-[148px] bg-black bg-opacity-50 flex justify-center items-center z-10">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Edytuj Wydarzenie</h2>
             <input
@@ -249,7 +247,7 @@ export const Scheduler = () => {
       )}
 
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
+        <div className="fixed inset-0 pl-[148px] bg-black bg-opacity-50 flex justify-center items-center z-10">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Usuń Wydarzenie</h2>
             <p className="mb-4">Czy na pewno chcesz usunąć wydarzenie '{selectedEvent?.title}'?</p>

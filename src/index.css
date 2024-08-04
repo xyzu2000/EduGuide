@@ -4,8 +4,6 @@
 
 
 * {
-    margin: 0;
-    padding: 0;
       /* Stylizacja scrollbar */
   &::-webkit-scrollbar {
     width: 8px; /* Szerokość paska przewijania */
@@ -24,11 +22,22 @@
   &::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.7); /* Kolor paska przewijania podczas najechania */
   }
-    box-sizing: border-box;
-    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  }
+
+  .perspective {
+    perspective: 1000px;
   }
   
-  body {
-    background-image: url("/src/assets/images/bg.jpg");
+  .preserve-3d {
+    transform-style: preserve-3d;
   }
+  
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+  
+  

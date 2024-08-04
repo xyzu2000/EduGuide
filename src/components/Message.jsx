@@ -60,7 +60,7 @@ const Message = ({ message, photoURL }) => {
       </div>
       <div className={clsx('texts', message.senderId === currentUser.uid ? 'items-end' : 'items-start')}>
         <p>
-          {message.text || ''}
+          <div dangerouslySetInnerHTML={{ __html: message.text }} />
           {message.img && <img src={message.img} className="m-auto p-3" alt="" onClick={() => handleImageClick(message.img)} />}
         </p>
         <span>{getMessageDate(message.date)}</span>

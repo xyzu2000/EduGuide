@@ -50,6 +50,41 @@ export const provider = new GoogleAuthProvider()
 //     })
 // }
 
+export function getFirebaseAuthErrorMessage(error) {
+    let errorMessage;
+
+    switch (error.code) {
+        case 'auth/invalid-credential':
+            errorMessage = 'Invalid credentials.';
+            break;
+        case 'auth/invalid-email':
+            errorMessage = 'Invalid email address.';
+            break;
+        case 'auth/user-disabled':
+            errorMessage = 'This account has been disabled.';
+            break;
+        case 'auth/user-not-found':
+            errorMessage = 'No user found with this email address.';
+            break;
+        case 'auth/wrong-password':
+            errorMessage = 'Incorrect password.';
+            break;
+        case 'auth/email-already-in-use':
+            errorMessage = 'This email address is already in use by another account.';
+            break;
+        case 'auth/operation-not-allowed':
+            errorMessage = 'Signing in is currently disabled.';
+            break;
+        case 'auth/weak-password':
+            errorMessage = 'The password is too weak.';
+            break;
+        default:
+            errorMessage = 'An unknown error occurred.';
+    }
+
+    return errorMessage;
+}
+
 export const getUsersList = async () => {
     const usersCollection = collection(db, 'users');
     const usersSnapshot = await getDocs(usersCollection);

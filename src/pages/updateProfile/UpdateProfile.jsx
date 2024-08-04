@@ -1,8 +1,15 @@
-import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
+import {
+    EmailAuthProvider,
+    reauthenticateWithCredential,
+    updatePassword,
+} from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import basicUserImg from '../../assets/images/user.png';
+import Button from '../../components/basics/Button';
+import InputField from '../../components/basics/InputField';
+import PageTitle from '../../components/basics/PageTitle';
 import { auth, db } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
 export const UpdateProfile = () => {
@@ -25,7 +32,7 @@ export const UpdateProfile = () => {
         if (!currentUser) return;
 
         setLoading(true);
-        const userDocRef = doc(db, "users", currentUser.uid);
+        const userDocRef = doc(db, 'users', currentUser.uid);
 
         try {
             await updateDoc(userDocRef, {
@@ -36,9 +43,11 @@ export const UpdateProfile = () => {
             // Refresh user data in AuthContext
             refreshUserData();
 
-            toast.success("Profile updated successfully", { position: "top-center" });
+            toast.success('Profile updated successfully', { position: 'top-center' });
         } catch (error) {
-            toast.error(`Failed to update profile: ${error.message}`, { position: "bottom-center" });
+            toast.error(`Failed to update profile: ${error.message}`, {
+                position: 'bottom-center',
+            });
         } finally {
             setLoading(false);
         }
@@ -48,7 +57,7 @@ export const UpdateProfile = () => {
         if (!currentUser) return;
 
         if (newPassword !== confirmNewPassword) {
-            toast.error("Passwords do not match", { position: "bottom-center" });
+            toast.error('Passwords do not match', { position: 'bottom-center' });
             return;
         }
 
@@ -61,124 +70,103 @@ export const UpdateProfile = () => {
                 const credential = EmailAuthProvider.credential(user.email, password);
                 await reauthenticateWithCredential(user, credential);
                 await updatePassword(user, newPassword);
-                toast.success("Password updated successfully", { position: "top-center" });
+                toast.success('Password updated successfully', {
+                    position: 'top-center',
+                });
             } else {
-                toast.error("Password change is only available for email/password accounts", { position: "bottom-center" });
+                toast.error(
+                    'Password change is only available for email/password accounts',
+                    { position: 'bottom-center' }
+                );
             }
         } catch (error) {
-            toast.error(`Failed to update password: ${error.message}`, { position: "bottom-center" });
+            toast.error(`Failed to update password: ${error.message}`, {
+                position: 'bottom-center',
+            });
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen min-w-full p-5">
-            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8 w-full max-w-5xl">
-                <h1 className="text-2xl font-bold mb-4 text-center inline-block bg-violet-400 p-4 rounded-xl">
-                    Update Profile
-                </h1>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="displayName">
-                        Display Name
-                    </label>
-                    <input
-                        id="displayName"
-                        type="text"
-                        value={displayName}
-                        onChange={(e) => setDisplayName(e.target.value)}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />
+        <>
+            <PageTitle title="Account" />
+            <div className="flex flex-col gap-2 bg-background-chatLight dark:bg-background-chatDark p-6 rounded-lg">
+                <h2 className="text-xl font-bold mb-4">Profile</h2>
+                {/* {photoURL && (
+          <div className="mb-4">
+            <img
+              src={photoURL}
+              alt="Profile"
+              className="rounded-full h-32 w-32 mx-auto"
+            />
+          </div>
+        )} */}
+                <InputField
+                    id="displayName"
+                    type="text"
+                    value={displayName}
+                    label="Display name"
+                    placeholder="Enter display name"
+                    onChange={(e) => setDisplayName(e.target.value)}
+                />
+                <InputField
+                    id="photoURL"
+                    type="text"
+                    label="Avatar"
+                    placeholder="Enter avatar url"
+                    value={photoURL}
+                    onChange={(e) => setPhotoURL(e.target.value)}
+                />
+                <div className="mt-4">
+                    <Button onClick={handleUpdateProfile} disabled={loading}>
+                        {loading ? 'Loading...' : 'Save'}
+                    </Button>
                 </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="photoURL">
-                        Photo URL
-                    </label>
-                    <input
-                        id="photoURL"
-                        type="text"
-                        value={photoURL}
-                        onChange={(e) => setPhotoURL(e.target.value)}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />
-                </div>
-                {photoURL && (
-                    <div className="mb-4">
-                        <img src={photoURL} alt="Profile" className="rounded-full h-32 w-32 mx-auto" />
-                    </div>
-                )}
-                <div className="flex items-center justify-between">
-                    <button
-                        onClick={handleUpdateProfile}
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        disabled={loading}
-                    >
-                        {loading ? "Updating..." : "Update Profile"}
-                    </button>
-                </div>
-                {currentUser && currentUser.providerData[0].providerId === 'password' && (
-                    <>
-                        <h2 className="text-xl font-bold mt-6 mb-4 text-center inline-block bg-violet-400 p-4 rounded-xl">
-                            Change Password
-                        </h2>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                                Current Password
-                            </label>
-                            <input
-                                id="password"
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="newPassword">
-                                New Password
-                            </label>
-                            <input
-                                id="newPassword"
-                                type="password"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmNewPassword">
-                                Confirm New Password
-                            </label>
-                            <input
-                                id="confirmNewPassword"
-                                type="password"
-                                value={confirmNewPassword}
-                                onChange={(e) => setConfirmNewPassword(e.target.value)}
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <button
-                                onClick={handleChangePassword}
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                disabled={loading}
-                            >
-                                {loading ? "Updating..." : "Change Password"}
-                            </button>
-                        </div>
-                    </>
-                )}
-                {currentUser && currentUser.providerData[0].providerId !== 'password' && (
-                    <p className="text-center mt-4 text-gray-600">
-                        Password change is not available for Google login. Please change your password through your Google account settings.
-                    </p>
-                )}
             </div>
-        </div>
+            {currentUser && currentUser.providerData[0].providerId === 'password' && (
+                <div className="flex flex-col gap-2 bg-background-chatLight dark:bg-background-chatDark p-6 rounded-lg mt-8">
+                    <h2 className="text-xl font-bold mb-4">Change password</h2>
+                    <InputField
+                        id="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        label="Current password"
+                        placeholder="Enter current password"
+                    />
+                    <InputField
+                        id="newPassword"
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        label="New password"
+                        placeholder="Enter new password"
+                    />
+                    <InputField
+                        id="confirmNewPassword"
+                        type="password"
+                        value={confirmNewPassword}
+                        onChange={(e) => setConfirmNewPassword(e.target.value)}
+                        label="Confirm new password"
+                        placeholder="Enter password"
+                    />
+                    <div className="mt-4">
+                        <Button onClick={handleChangePassword} disabled={loading}>
+                            {loading ? 'Loading...' : 'Save'}
+                        </Button>
+                    </div>
+                    {currentUser &&
+                        currentUser.providerData[0].providerId !== 'password' && (
+                            <p className="text-center mt-4 text-gray-600">
+                                Password change is not available for Google login. Please change
+                                your password through your Google account settings.
+                            </p>
+                        )}
+                </div>
+            )}
+        </>
     );
-
-
-
 };
 
 export default UpdateProfile;

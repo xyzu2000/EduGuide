@@ -8,6 +8,8 @@ export const ChatContextProvider = ({ children }) => {
   const INITIAL_STATE = {
     chatId: null,
     user: null,
+    currentUser: currentUser,
+    sharedMessage: '',
   };
 
   const chatReducer = (state, action) => {
@@ -26,6 +28,11 @@ export const ChatContextProvider = ({ children }) => {
         };
         console.log("Updated chat state:", newState);
         return newState;
+      case 'SET_SHARED_MESSAGE':
+        return {
+          ...state,
+          sharedMessage: action.payload,
+        };
       default:
         console.error("Unhandled action type: ", action.type);
         return state;

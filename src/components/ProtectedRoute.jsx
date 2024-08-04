@@ -30,11 +30,13 @@ export const ProtectedRoute = () => {
   return (
     <>
       <SideNav />
-      {/* dodac klase na kontener */}
-      <Outlet />
+      <div className="pl-[148px]">
+        <div className="p-4 sm:p-6 lg:p-20">
+          <Outlet />
+        </div>
+      </div>
     </>
   );
 };
-
 
 export default ProtectedRoute;

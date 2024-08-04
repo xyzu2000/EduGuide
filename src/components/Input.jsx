@@ -8,6 +8,9 @@ import {
 } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import React, { useContext, useState } from 'react';
+import { FaMicrophoneAlt, FaPhotoVideo } from "react-icons/fa";
+import { GrEmoji } from "react-icons/gr";
+import { MdOutlinePhotoCamera } from "react-icons/md";
 import { v4 as uuid } from 'uuid';
 import { db, storage } from '../config/firebase';
 import { AuthContext } from '../context/AuthContext';
@@ -123,10 +126,10 @@ const Input = () => {
           onChange={(e) => setImg(e.target.files[0])}
         />
         <label htmlFor="file">
-          <img src="./img.png" alt="" />
+          <FaPhotoVideo className='cursor-pointer' />
         </label>
-        <img src="./camera.png" alt="" />
-        <img src="./mic.png" alt="" />
+        <MdOutlinePhotoCamera className='cursor-pointer' />
+        <FaMicrophoneAlt className='cursor-pointer' />
       </div>
       <input
         type="text"
@@ -135,12 +138,8 @@ const Input = () => {
         onKeyDown={handleKeyDown}
         onChange={(e) => setText(e.target.value)}
       />
-      <div className="emoji">
-        <img
-          src="./emoji.png"
-          alt=""
-          onClick={() => { setOpen(prev => !prev); }}
-        />
+      <div className="emoji cursor-pointer">
+        <GrEmoji onClick={() => { setOpen(prev => !prev); }} />
         {open && (
           <div className="picker">
             <EmojiPicker onEmojiClick={handleEmoji} />

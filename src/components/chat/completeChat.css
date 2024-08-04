@@ -17,7 +17,7 @@
         display: flex;
         align-items: center;
         gap: 20px;
-  
+        color: black;
         img {
           width: 60px;
           height: 60px;
@@ -46,12 +46,7 @@
       .icons {
         display: flex;
         gap: 20px;
-  
-        img {
-          width: 20px;
-          height: 20px;
-          cursor: pointer;
-        }
+        color:black
       }
     }
   
@@ -75,7 +70,7 @@
   
           .texts {
             p {
-              background-color: #c76718;
+              background-color: rgb(51 65 85 / var(--tw-bg-opacity)) /* #334155 */;
             }
           }
         }
@@ -103,7 +98,7 @@
   
           p {
             padding: 20px;
-            background-color: rgba(17, 82, 202, 0.596);
+            background-color: rgb(38 38 39 / var(--tw-bg-opacity)) /* #262627 */;
             border-radius: 10px;
           }
   
@@ -126,17 +121,13 @@
       .icons {
         display: flex;
         gap: 20px;
-      }
-  
-      img {
-        width: 20px;
-        height: 20px;
+        color: black;
         cursor: pointer;
       }
   
       input {
         flex: 1;
-        background-color: rgba(17, 25, 40, 0.5);
+        background-color: #4f46e5;
         border: none;
         outline: none;
         color: white;
@@ -151,26 +142,22 @@
   
       .emoji {
         position: relative;
-  
+        color: black;
+
         .picker {
           position: absolute;
           bottom: 50px;
-          left: 0;
+          right: 0;
         }
       }
   
       .sendButton {
-        background-color: #5183fe;
+        background-color: #4f46e5;
         color: white;
         padding: 10px 20px;
         border: none;
         border-radius: 5px;
         cursor: pointer;
-  
-        &:disabled {
-          background-color: #5182feb4;
-          cursor: not-allowed;
-        }
       }
     }
   }
