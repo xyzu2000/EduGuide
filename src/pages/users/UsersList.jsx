@@ -1,9 +1,11 @@
+import clsx from 'clsx';
 import { collection, getDocs } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
+import Button from "../../components/basics/Button";
 import { db } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
 
-export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel }) => {
+export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel, className, btnProps }) => {
   const [users, setUsers] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const { currentUser } = useContext(AuthContext);
@@ -35,8 +37,8 @@ export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel }) => {
   );
 
   return (
-    <div className="fixed inset-20 max-w-max max-h-[80%] h-screen flex flex-col mx-auto p-5">
-      <div className="flex flex-col text-white bg-gray-500 dark:bg-gray-900 p-5 rounded-xl overflow-auto relative">
+    <div className={clsx("fixed inset-20 max-w-max max-h-[80%] h-screen flex flex-col mx-auto p-5", className)}>
+      <div className="flex flex-col text-white bg-white dark:bg-gray-900 p-5 rounded-xl overflow-auto relative ">
         <h3 className="mb-5 text-xl font-bold bg-violet-400 p-4 rounded-xl">
           Lista Użytkowników
         </h3>
@@ -53,9 +55,9 @@ export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel }) => {
           {filteredUsers.map((user) => (
             <div
               key={user.uid}  // Upewnij się, że key jest unikalny
-              className="flex items-center justify-between p-4 mb-4 bg-white dark:bg-gray-800 rounded-xl"
+              className="flex items-center justify-between p-4 mb-4 bg-white dark:bg-gray-800 rounded-xl hover:bg-zinc-200 dark:hover:bg-gray-700 "
             >
-              <div className="userDetails flex items-center space-x-4">
+              <div className=" flex items-center space-x-4">
                 <img
                   src={user.photoURL || ''}
                   alt={user.displayName || ''}
@@ -67,12 +69,12 @@ export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel }) => {
                 </div>
               </div>
               <div className="">
-                <button
-                  className="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                <Button
                   onClick={() => handleUserClick(user)}
+                  className={btnProps}
                 >
                   {buttonLabel}
-                </button>
+                </Button>
               </div>
             </div>
           ))}

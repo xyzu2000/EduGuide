@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import basicUserImg from "../../assets/images/user.png";
 import LoadingSpinner from '../../components/loadingPage/LoadingSpinner';
 import { AuthContext } from '../../context/AuthContext';
+import { UsersList } from "../../pages/users/UsersList";
 
 export const LoggedPage = () => {
     const { currentUser } = useContext(AuthContext);
@@ -15,9 +16,6 @@ export const LoggedPage = () => {
         { id: 'calendar', name: 'Calendar', path: '/scheduler', icon: <FaCalendarAlt />, description: 'Zarządzaj swoimi wydarzeniami i spotkaniami' },
         { id: 'flashcards', name: 'Flashcards', path: '/flashcards', icon: <MdCreditCard />, description: 'Tworz oraz udostepniaj swoje fiszki' },
         { id: 'pomodoro', name: 'Pomodoros', path: '/pomodoro', icon: <LuListTodo />, description: 'Odliczaj czas swojej nauki' },
-        // { id: 'users', name: 'Lista użytkowników', path: '/users', icon: <FaUserFriends />, description: 'Zobacz listę zarejestrowanych użytkowników' },
-        // { id: 'notifications', name: 'Powiadomienia', path: '/notifications', icon: <FaBell />, description: 'Przeglądaj swoje powiadomienia' },
-        // { id: 'activity', name: 'Ostatnie aktywności', path: '/activity', icon: <FaHistory />, description: 'Śledź swoje ostatnie aktywności' }
     ];
     if (!currentUser) {
         return <LoadingSpinner />
@@ -37,7 +35,7 @@ export const LoggedPage = () => {
                         />
                         <h1 className="text-2xl font-semibold mb-2">{`Witaj, ${currentUser.displayName}!`}</h1>
                         <p className="text-gray-600 dark:text-gray-400 mb-4">{`Email: ${currentUser.email}`}</p>
-                        <Link to="/updateProfile" className="text-indigo-600 hover:underline">
+                        <Link to="/update-profile" className="text-indigo-600 hover:underline">
                             Edytuj profil
                         </Link>
                     </div>
@@ -59,8 +57,8 @@ export const LoggedPage = () => {
                     </div>
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 w-full max-w-md mb-8">
-                    Users list
+                <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg w-full max-w-md mb-8">
+                    <UsersList className="relative top-0 left-0 w-full  max-h-full overflow-y-auto bg-none" buttonLabel=">" />
                 </div>
             </div>
         </div>

@@ -2,6 +2,9 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
 import { GoMute, GoUnmute } from "react-icons/go";
 import 'tailwindcss/tailwind.css';
+import Button from '../../components/basics/Button';
+import InputField from '../../components/basics/InputField';
+import PageTitle from '../../components/basics/PageTitle';
 import { db } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
 
@@ -117,7 +120,8 @@ export const PomodoroTimer = () => {
         });
     };
 
-    const handleSavePomodoro = async () => {
+    const handleSavePomodoro = async (e) => {
+        e.preventDefault()
         if (!currentUser) return;
 
         const userPomodoroRef = doc(db, 'usersPomodoros', currentUser.uid);
@@ -229,91 +233,91 @@ export const PomodoroTimer = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-            <h1 className="text-2xl font-semibold mb-6">Pomodoro Timer</h1>
-            <div className="mb-6">
-                <h2 className="text-xl font-semibold mb-4">{editMode ? 'Edit Pomodoro' : 'Add Pomodoro'}</h2>
-                <div className="mb-4">
-                    <input
-                        type="text"
-                        value={currentPomodoro.title}
-                        onChange={(e) => setCurrentPomodoro(prev => ({ ...prev, title: e.target.value }))}
-                        placeholder="Title"
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                    />
+        <>
+            <PageTitle title="Pomodoro timer" />
+
+            <div className="mb-8">
+                <div className="flex flex-col gap-2 bg-background-chatLight dark:bg-background-chatDark p-6 rounded-lg">
+                    <h2 className="text-xl font-semibold mb-4">{editMode ? 'Edit Pomodoro' : 'Add Pomodoro'}</h2>
+                    <form className="mb-4" onSubmit={handleSavePomodoro}>
+                        <InputField
+                            required
+                            type="text"
+                            value={currentPomodoro.title}
+                            placeholder="Title"
+                            className="mb-2"
+                            onChange={(e) => setCurrentPomodoro(prev => ({ ...prev, title: e.target.value }))}
+                        />
+                        <InputField
+                            required
+                            type="number"
+                            value={currentPomodoro.duration}
+                            placeholder="Duration (minutes)"
+                            onChange={(e) => setCurrentPomodoro(prev => ({ ...prev, duration: Number(e.target.value) }))}
+                        />
+                        <Button
+                            onClick={handleSavePomodoro}
+                            className='mt-4'
+                        >
+                            {editMode ? 'Save Changes' : 'Add Pomodoro'}
+                        </Button>
+                    </form>
                 </div>
-                <div className="mb-4">
-                    <input
-                        type="number"
-                        value={currentPomodoro.duration}
-                        onChange={(e) => setCurrentPomodoro(prev => ({ ...prev, duration: Number(e.target.value) }))}
-                        placeholder="Duration (minutes)"
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                    />
+
+                <div className="flex flex-col gap-2 bg-background-chatLight dark:bg-background-chatDark  p-6 rounded-lg mt-8">
+                    <h2 className="text-xl font-semibold mb-4">Your Pomodoros</h2>
+                    <ul>
+                        {pomodoros.map(pomodoro => (
+                            <li key={pomodoro.id} className="flex justify-between items-center mb-4 p-4 bg-gray-100 dark:bg-background-sideDark rounded-lg">
+                                <div>
+                                    <h3 className="text-lg font-semibold dark:text-white">{pomodoro.title}</h3>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        Time Left: {Math.floor(pomodoro.timeLeft / 60)}:{('0' + (pomodoro.timeLeft % 60)).slice(-2)}
+                                    </p>
+                                </div>
+                                <div className='flex items-center gap-1'>
+                                    {pomodoro.isActive && (
+                                        <div onClick={handleMute} className="mr-2 cursor-pointer">
+                                            {mute ?
+                                                <GoMute className='dark:text-white' /> :
+                                                <GoUnmute className='dark:text-white' />}
+                                        </div>
+                                    )}
+                                    {pomodoro.isActive ? (
+                                        <Button
+                                            onClick={() => handleStop(pomodoro.id)}
+                                        >
+                                            Stop
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            onClick={() => handleStart(pomodoro.id)}
+                                        >
+                                            Start
+                                        </Button>
+                                    )}
+                                    <Button
+                                        onClick={() => handleReset(pomodoro.id)}
+                                    >
+                                        Reset
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleEdit(pomodoro)}
+                                    >
+                                        Edit
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleDeletePomodoro(pomodoro.id)}
+                                    >
+                                        Delete
+                                    </Button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
-                <button
-                    onClick={handleSavePomodoro}
-                    className={`px-4 py-2 ${editMode ? 'bg-yellow-500' : 'bg-green-500'} text-white rounded-md`}
-                >
-                    {editMode ? 'Save Changes' : 'Add Pomodoro'}
-                </button>
             </div>
-            <div>
-                <h2 className="text-xl font-semibold mb-4">Your Pomodoros</h2>
-                <ul>
-                    {pomodoros.map(pomodoro => (
-                        <li key={pomodoro.id} className="flex justify-between items-center mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                            <div>
-                                <h3 className="text-lg font-semibold">{pomodoro.title}</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Time Left: {Math.floor(pomodoro.timeLeft / 60)}:{('0' + (pomodoro.timeLeft % 60)).slice(-2)}
-                                </p>
-                            </div>
-                            <div className='flex items-center'>
-                                {pomodoro.isActive && (
-                                    <div onClick={handleMute} className="mr-2 cursor-pointer">
-                                        {mute ? <GoMute /> : <GoUnmute />}
-                                    </div>
-                                )}
-                                {pomodoro.isActive ? (
-                                    <button
-                                        onClick={() => handleStop(pomodoro.id)}
-                                        className="px-4 py-2 bg-red-500 text-white rounded-md"
-                                    >
-                                        Stop
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={() => handleStart(pomodoro.id)}
-                                        className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                                    >
-                                        Start
-                                    </button>
-                                )}
-                                <button
-                                    onClick={() => handleReset(pomodoro.id)}
-                                    className="px-4 py-2 bg-gray-500 text-white rounded-md ml-2"
-                                >
-                                    Reset
-                                </button>
-                                <button
-                                    onClick={() => handleEdit(pomodoro)}
-                                    className="px-4 py-2 bg-yellow-500 text-white rounded-md ml-2"
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    onClick={() => handleDeletePomodoro(pomodoro.id)}
-                                    className="px-4 py-2 bg-red-700 text-white rounded-md ml-2"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        </div>
+        </>
     );
 };
 

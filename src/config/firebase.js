@@ -3,14 +3,12 @@ import { getAnalytics } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
 import {
-    collection,
     doc,
     getDoc,
-    getDocs,
     getFirestore,
     serverTimestamp,
     setDoc,
-    updateDoc,
+    updateDoc
 } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 // TODO: Add SDKs for Firebase products that you want to use
@@ -85,18 +83,6 @@ export function getFirebaseAuthErrorMessage(error) {
     return errorMessage;
 }
 
-export const getUsersList = async () => {
-    const usersCollection = collection(db, 'users');
-    const usersSnapshot = await getDocs(usersCollection);
-    const usersList = [];
-
-    usersSnapshot.forEach((doc) => {
-        const userData = doc.data();
-        usersList.push(userData.displayName);
-    });
-
-    return usersList;
-};
 
 export const moveOrCreateChatUser = async (currentUser, user) => {
     const combinedId =

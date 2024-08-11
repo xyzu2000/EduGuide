@@ -28,17 +28,17 @@ const CompleteChat = ({ toggleDetail }) => {
             {data.user ? (
                 <>
                     <div className="p-5 flex items-center justify-between border-b border-[#dddddd35] text-text-light dark:text-text-dark">
-                        <div className="flex items-center gap-5">
-                            <img src={photoURL || basicUserImg} alt="" className="w-15 h-15 rounded-full object-cover" />
-                            <div className="flex flex-col gap-1.5">
+                        <div className="flex items-center gap-3">
+                            <img src={photoURL || basicUserImg} alt="" className='w-14 h-14 object-fill rounded-full' />
+                            <div className="flex flex-col gap-1.5 items-center justify-center">
                                 <span className="text-lg font-bold">{data.user.displayName}</span>
-                                <p className="text-sm font-light text-gray-400">xd</p>
                             </div>
                         </div>
                         <div className="flex gap-5">
                             <MdOutlinePhoneInTalk className="cursor-pointer" />
                             <CiVideoOn className="cursor-pointer" />
-                            <CiCircleInfo className="cursor-pointer" onClick={toggleDetail} />
+                            <CiCircleInfo className="cursor-pointer" />
+                            {/* <CiCircleInfo className="cursor-pointer" onClick={toggleDetail} /> */}
                         </div>
                     </div>
                     <div className="p-5 flex-1 overflow-auto flex flex-col gap-5">

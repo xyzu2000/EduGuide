@@ -30,7 +30,7 @@ export default function FlashcardForm({ selectedFlashcard, onSave, onCancel, can
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <div className="flex flex-col gap-2 bg-background-sideLight dark:bg-background-sideDark p-6 rounded-lg">
+                <div className="flex flex-col gap-2 bg-background-sideLight dark:bg-background-sideDark p-6 rounded-lg mb-8">
                     <InputField
                         id="term"
                         type="text"
@@ -54,10 +54,10 @@ export default function FlashcardForm({ selectedFlashcard, onSave, onCancel, can
                         type="checkbox"
                         label="Make this flashcard public"
                         checked={isPublic}
-                        className="max-w-4"
+                        className="max-w-4 "
                         onChange={(e) => setIsPublic(e.target.checked)}
                     />
-                    <div className="mt-4">
+                    <div >
                         <Button type="submit" className="mr-2">
                             Save
                         </Button>

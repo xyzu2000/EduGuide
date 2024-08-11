@@ -1,10 +1,12 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, setDoc, where } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
+import { FaMinus, FaPlus } from "react-icons/fa";
 import PageTitle from '../../components/basics/PageTitle';
 import { db } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
 import Flashcard from './Flashcard';
 import FlashcardForm from './FlashcardForm';
+
 
 export default function FlashcardList() {
     const { currentUser } = useContext(AuthContext);
@@ -118,7 +120,17 @@ export default function FlashcardList() {
     return (
         <>
             <PageTitle title="Flashcards" />
-            <div className="mb-6">
+            <FlashcardForm
+                selectedFlashcard={selectedFlashcard}
+                onSave={handleAddOrEditFlashcard}
+                onCancel={() => {
+                    setSelectedFlashcard(null);
+                    setCancelEdit(prev => !prev);
+                }}
+                cancelEdit={cancelEdit}
+                setCancelEdit={setCancelEdit}
+            />
+            <div className="mb-8">
                 <h2 className="text-xl font-bold dark:text-white">My Flashcards</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {flashcards.map(flashcard => (
@@ -140,7 +152,16 @@ export default function FlashcardList() {
             </div>
             <h2 className="flex items-center gap-2">
                 <p className='text-xl font-bold dark:text-white'>Public Flashcards</p>
-                <img src={showPublic ? "./minus.png" : "./plus.png"} className='cursor-pointer w-6' onClick={(e) => setShowPublic(prev => !prev)} />
+                {showPublic ?
+
+                    <FaMinus
+                        className='cursor-pointer dark:text-white'
+                        onClick={(e) => setShowPublic(prev => !prev)} />
+                    :
+                    <FaPlus
+                        className='cursor-pointer dark:text-white'
+                        onClick={(e) => setShowPublic(prev => !prev)} />
+                }
             </h2>
             {showPublic && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4  mb-6">
@@ -155,16 +176,6 @@ export default function FlashcardList() {
                     ))}
                 </div>
             )}
-            <FlashcardForm
-                selectedFlashcard={selectedFlashcard}
-                onSave={handleAddOrEditFlashcard}
-                onCancel={() => {
-                    setSelectedFlashcard(null);
-                    setCancelEdit(prev => !prev);
-                }}
-                cancelEdit={cancelEdit}
-                setCancelEdit={setCancelEdit}
-            />
         </>
     );
 }
