@@ -12,7 +12,7 @@ export default function History({ question, answer, onClick, setModal, modal }) 
   const { data, dispatch } = useContext(ChatContext);
 
   const handleShareQuestion = (e) => {
-    e.stopPropagation();
+
     const messageContent = `
   <div>
     Wiadomosc z czatu ...
@@ -30,22 +30,22 @@ export default function History({ question, answer, onClick, setModal, modal }) 
       font-size: 16px;
       font-weight: bold;
       margin-bottom: 8px;
-      color: rgb(228 228 231 / var(--tw-bg-opacity));
+      color: black
     ">To moje pytanie do bota:</p>
     <p style="
       font-size: 14px;
       margin-bottom: 16px;
-      color: white;
+      color: black;
     ">${question}</p>
     <p style="
       font-size: 16px;
       font-weight: bold;
       margin-bottom: 8px;
-      color:rgb(228 228 231 / var(--tw-bg-opacity));
+      color:black
     ">Odpowiedź:</p>
     <p style="
       font-size: 14px;
-      color: white;
+      color: black;
     ">${answer}</p>
   </div>
 `;
@@ -57,12 +57,11 @@ export default function History({ question, answer, onClick, setModal, modal }) 
   };
 
   const handleModal = (e) => {
-    e.stopPropagation();  // Zatrzymanie propagacji zdarzenia kliknięcia podczas zamykania modalu
     setModal(prev => !prev);
   };
 
-  const handleUserClick = async (user, e) => {
-    e.stopPropagation();  // Zatrzymanie propagacji zdarzenia kliknięcia podczas wysyłania wiadomości
+  const handleUserClick = async (user) => {
+
     const chatId = currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid;
     const messageContent = data.sharedMessage;
 
@@ -89,7 +88,7 @@ export default function History({ question, answer, onClick, setModal, modal }) 
       [chatId + '.date']: serverTimestamp(),
     });
 
-    handleModal(e);
+    handleModal();
   };
 
   return (
@@ -97,7 +96,7 @@ export default function History({ question, answer, onClick, setModal, modal }) 
       <p>{question}...</p>
       <div className="flex items-center gap-2">
         <FaShare className="hover:text-indigo-400 active:text-indigo-700 min-w-5 max-w-5 cursor-pointer" onClick={handleShareQuestion} />
-        {modal && <UsersList handleModal={handleModal} buttonLabel={'Udostepnij'} onUserClick={(user) => handleUserClick(user, new Event('click'))} />}
+        {modal && <UsersList handleModal={handleModal} buttonLabel={'Udostepnij'} onUserClick={(user) => handleUserClick(user)} />}
       </div>
     </div>
   );

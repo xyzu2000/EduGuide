@@ -26,7 +26,7 @@ const Messages = ({ photoURL }) => {
   }, [data.chatId]);
 
   return (
-    <div className="center">
+    <div className="p-5 flex-1 overflow-auto flex flex-col gap-5">
       {messages.length > 0 ? (
         messages.map((m) => (
           <Message message={m} key={m.id} photoURL={photoURL} />

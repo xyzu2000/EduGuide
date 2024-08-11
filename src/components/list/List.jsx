@@ -1,10 +1,9 @@
 import React from 'react'
 import ChatList from "./chatList/ChatList"
-import "./list.css"
 import UserInfo from "./userInfo/UserInfo"
 const List = () => {
     return (
-        <div className='list'>
+        <div className='flex flex-col flex-1'>
             <UserInfo />
             <ChatList />
         </div>

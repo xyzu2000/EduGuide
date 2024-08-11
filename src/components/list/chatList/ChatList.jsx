@@ -6,7 +6,6 @@ import { AuthContext } from '../../../context/AuthContext';
 import { ChatContext } from '../../../context/ChatContext';
 import { UserContext } from '../../../context/UserContext';
 import UsersList from '../../../pages/users/UsersList';
-import './chatList.css';
 
 const ChatList = () => {
     const [chats, setChats] = useState([]);
@@ -45,20 +44,21 @@ const ChatList = () => {
     );
 
     return (
-        <div className="chatList">
-            <div className="search">
-                <div className="searchBar">
-                    <img src="./search.png" alt="Search" />
+        <div className="flex-1 overflow-auto text-black">
+            <div className="flex items-center gap-5 p-5">
+                <div className="flex items-center flex-1 gap-5 bg-indigo-600 p-2 rounded-lg">
+                    <img src="./search.png" alt="Search" className="w-5 h-5" />
                     <input
                         type="text"
                         placeholder="Search"
                         onChange={(e) => setInput(e.target.value)}
+                        className="flex-1 bg-transparent border-none outline-none text-white"
                     />
                 </div>
                 <img
                     src={addMode ? "./minus.png" : "./plus.png"}
                     alt="Add"
-                    className="add"
+                    className="w-9 h-9 bg-indigo-600 p-2 rounded-lg cursor-pointer"
                     onClick={() => setAddMode((prev) => !prev)}
                 />
             </div>
@@ -78,7 +78,6 @@ const ChatList = () => {
                 'Nie znaleziono czatu'
             )}
 
-            {/* {addMode && <AddUser />} */}
             {addMode && <UsersList handleModal={handleAddMode} buttonLabel={`Przejdz do czatu`} modal={addMode} />}
         </div>
     );
@@ -98,18 +97,20 @@ const ChatListItem = ({ chatData, handleSelect, getUserPhotoURL }) => {
 
     return (
         <div
-            className="item hover:bg-indigo-500 transition-colors duration-300"
+            className="flex group items-center gap-5 p-5 cursor-pointer hover:bg-indigo-500 transition-colors duration-300"
             onClick={() => handleSelect(chatData.userInfo)}
         >
             <img
                 src={photoURL || basicUserImg}
                 alt={chatData?.userInfo?.displayName || 'User'}
+                className="w-12 h-12 rounded-full object-cover"
             />
-            <div className="texts">
-                <span>{chatData.userInfo?.displayName || 'Nieznany użytkownik'}</span>
+            <div className="flex flex-col gap-2">
+                <span className="font-bold">{chatData.userInfo?.displayName || 'Nieznany użytkownik'}</span>
                 <div
-                    className='lastMsg'
-                    dangerouslySetInnerHTML={{ __html: chatData.lastMessage?.text.substring(0, 50) } || 'Brak wiadomości'} />
+                    className="text-sm text-gray-600 dark:text-slate-300 group-hover:text-slate-300 max-w-[200px] max-h-5 overflow-hidden text-ellipsis whitespace-nowrap"
+                    dangerouslySetInnerHTML={{ __html: chatData.lastMessage?.text.substring(0, 50) || 'Brak wiadomości' }}
+                />
             </div>
         </div>
     );

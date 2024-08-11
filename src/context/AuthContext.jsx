@@ -37,13 +37,14 @@ export const AuthContext = createContext(null);
 
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-
+  const [userTheme, setUserTheme] = useState(null)
   const fetchUserData = async (user) => {
     if (user) {
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         setCurrentUser({ ...user, ...docSnap.data() });
+        setUserTheme(docSnap.data().darkMode)
       } else {
         console.log("User document not found in Firestore");
       }
@@ -66,7 +67,7 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ currentUser, refreshUserData }}>
+    <AuthContext.Provider value={{ currentUser, refreshUserData, userTheme }}>
       {children}
     </AuthContext.Provider>
   );

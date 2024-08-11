@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import GlobalTimerDisplay from './GlobalTimerDisplay';
 import SideNav from './SideNav';
 import LoadingSpinner from './loadingPage/LoadingSpinner';
 
@@ -32,6 +33,7 @@ export const ProtectedRoute = () => {
       <SideNav />
       <div className="pl-[148px]">
         <div className="p-4 sm:p-6 lg:p-20">
+          <GlobalTimerDisplay /> {/* Dodaj GlobalTimerDisplay tutaj */}
           <Outlet />
         </div>
       </div>

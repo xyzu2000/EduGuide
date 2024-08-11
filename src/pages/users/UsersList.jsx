@@ -36,7 +36,7 @@ export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel }) => {
 
   return (
     <div className="fixed inset-20 max-w-max max-h-[80%] h-screen flex flex-col mx-auto p-5">
-      <div className="flex flex-col text-white bg-gray-900 p-5 rounded-xl overflow-auto">
+      <div className="flex flex-col text-white bg-gray-500 dark:bg-gray-900 p-5 rounded-xl overflow-auto relative">
         <h3 className="mb-5 text-xl font-bold bg-violet-400 p-4 rounded-xl">
           Lista Użytkowników
         </h3>
@@ -46,24 +46,27 @@ export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel }) => {
             placeholder="Szukaj..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="w-full p-2 rounded-lg border border-gray-700 bg-gray-800 text-white"
+            className="w-full p-2 rounded-lg border border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white"
           />
         </div>
         <div className="flex-1 overflow-auto mb-5">
           {filteredUsers.map((user) => (
-            <div key={user.uid} className="flex items-center justify-between p-4 mb-4 bg-gray-800 rounded-xl">
+            <div
+              key={user.uid}  // Upewnij się, że key jest unikalny
+              className="flex items-center justify-between p-4 mb-4 bg-white dark:bg-gray-800 rounded-xl"
+            >
               <div className="userDetails flex items-center space-x-4">
                 <img
                   src={user.photoURL || ''}
                   alt={user.displayName || ''}
                   className="userImage w-16 h-16 rounded-full"
                 />
-                <div>
-                  <p className="userName text-lg font-semibold">{user.displayName}</p>
-                  <p className="userEmail text-sm text-gray-400">{user.email}</p>
+                <div className=''>
+                  <p className="text-lg text-black dark:text-white font-semibold">{user.displayName}</p>
+                  <p className="text-sm text-gray-400">{user.email}</p>
                 </div>
               </div>
-              <div className="userActions">
+              <div className="">
                 <button
                   className="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                   onClick={() => handleUserClick(user)}
@@ -73,6 +76,7 @@ export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel }) => {
               </div>
             </div>
           ))}
+
         </div>
       </div>
     </div>

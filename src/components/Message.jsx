@@ -47,28 +47,35 @@ const Message = ({ message, photoURL }) => {
     setModalImage("");
   };
 
-  if (!message || !message.senderId || !message.date) return null; // Sprawdzenie, czy wiadomość istnieje
+  if (!message || !message.senderId || !message.date) return null;
 
   return (
     <div
       ref={ref}
-      // className={`message ${message.senderId === currentUser.uid ? "own" : ""}`}
-      className={clsx('message', message.senderId === currentUser.uid && 'own')}
+      className={clsx('flex gap-3', message.senderId === currentUser.uid && 'justify-end')}
     >
-      <div className="messageInfo">
-        <img src={senderPhotoURL || basicUserImg} alt="" />
-      </div>
-      <div className={clsx('texts', message.senderId === currentUser.uid ? 'items-end' : 'items-start')}>
-        <p>
-          <div dangerouslySetInnerHTML={{ __html: message.text }} />
-          {message.img && <img src={message.img} className="m-auto p-3" alt="" onClick={() => handleImageClick(message.img)} />}
-        </p>
-        <span>{getMessageDate(message.date)}</span>
+      <div className={clsx('texts flex flex-col gap-2 ', message.senderId === currentUser.uid ? 'items-end' : 'items-start')}>
+        <div className='flex gap-3 items-start'>
+          <img src={senderPhotoURL || basicUserImg} alt="" className="w-8 h-8 rounded-full object-cover" />
+          <p className={clsx('p-3 rounded-lg max-w-xs break-words', message.senderId === currentUser.uid ? 'dark:bg-slate-500 bg-background-light dark:text-text-dark' : 'dark:bg-zinc-800 bg-zinc-500 text-text-dark')}>
+            <div dangerouslySetInnerHTML={{ __html: message.text }} />
+            {message.img && (
+              <img
+                src={message.img}
+                className="m-auto p-3 cursor-pointer"
+                alt=""
+                onClick={() => handleImageClick(message.img)}
+              />
+            )}
+          </p>
+        </div>
+        <span className="text-sm text-gray-500 dark:text-white">{getMessageDate(message.date)}</span>
       </div>
       {isModalOpen && (
         <ImageModal imageUrl={modalImage} closeModal={closeModal} />
       )}
     </div>
+
   );
 };
 const ImageModal = ({ imageUrl, closeModal }) => (

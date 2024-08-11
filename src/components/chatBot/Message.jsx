@@ -27,10 +27,10 @@ export default function Message({ role, content }) {
           }`}
       >
         <div
-          className={`inline-block ${role === 'assistant' ? 'bg-[#262627]' : 'bg-slate-700'
+          className={`inline-block ${role === 'assistant' ? 'dark:bg-zinc-800 bg-zinc-500 text-white' : 'dark:bg-slate-500 bg-background-light  '
             } p-3 rounded-[10px]`}
         >
-          <p className="text-white">{content}</p>
+          <p className={`${role === 'assistant' ? 'text-text-dark' : 'text-slate-800 dark:text-text-dark'}`}>{content}</p>
         </div>
       </div>
 

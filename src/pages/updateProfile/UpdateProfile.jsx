@@ -125,7 +125,7 @@ export const UpdateProfile = () => {
                 </div>
             </div>
             {currentUser && currentUser.providerData[0].providerId === 'password' && (
-                <div className="flex flex-col gap-2 bg-background-chatLight dark:bg-background-chatDark p-6 rounded-lg mt-8">
+                <div className="flex flex-col gap-2 bg-background-chatLight dark:bg-background-chatDark  p-6 rounded-lg mt-8">
                     <h2 className="text-xl font-bold mb-4">Change password</h2>
                     <InputField
                         id="password"

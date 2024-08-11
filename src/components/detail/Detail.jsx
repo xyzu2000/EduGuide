@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ChatContext } from '../../context/ChatContext';
 import { UserContext } from '../../context/UserContext';
-import "./detail.css";
 const Detail = () => {
     const { data } = useContext(ChatContext);
     const [open, setOpen] = useState(false)

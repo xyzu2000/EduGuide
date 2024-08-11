@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { signOut } from 'firebase/auth';
 import React from 'react';
 import { FaSignOutAlt } from 'react-icons/fa';
+import { LuListTodo } from "react-icons/lu";
 import { MdCreditCard } from "react-icons/md";
 import {
   TbCalendar,
@@ -41,7 +42,12 @@ const menuItems = [
     path: '/flashcards',
     name: 'Flashcards',
     icon: <MdCreditCard />,
-  }
+  },
+  {
+    path: '/pomodoro',
+    name: 'Pomodoro',
+    icon: <LuListTodo />,
+  },
 ];
 
 const downMenuItems = [

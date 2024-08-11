@@ -117,8 +117,8 @@ const Input = () => {
   };
 
   return (
-    <div className="bottom">
-      <div className="icons">
+    <div className="bottom flex items-center justify-between p-4 border-t border-gray-300 gap-4">
+      <div className="icons flex gap-4 text-black dark:text-white">
         <input
           type="file"
           style={{ display: 'none' }}
@@ -126,28 +126,30 @@ const Input = () => {
           onChange={(e) => setImg(e.target.files[0])}
         />
         <label htmlFor="file">
-          <FaPhotoVideo className='cursor-pointer' />
+          <FaPhotoVideo className="cursor-pointer" />
         </label>
-        <MdOutlinePhotoCamera className='cursor-pointer' />
-        <FaMicrophoneAlt className='cursor-pointer' />
+        <MdOutlinePhotoCamera className="cursor-pointer" />
+        <FaMicrophoneAlt className="cursor-pointer" />
       </div>
       <input
         type="text"
         value={text}
-        placeholder='Type a message...'
+        placeholder="Type a message..."
         onKeyDown={handleKeyDown}
         onChange={(e) => setText(e.target.value)}
+        className="flex-1 bg-indigo-600 text-white p-3 rounded-lg outline-none"
       />
-      <div className="emoji cursor-pointer">
+      <div className="emoji relative text-black dark:text-white cursor-pointer">
         <GrEmoji onClick={() => { setOpen(prev => !prev); }} />
         {open && (
-          <div className="picker">
+          <div className="picker absolute bottom-12 right-0">
             <EmojiPicker onEmojiClick={handleEmoji} />
           </div>
         )}
       </div>
-      <button className="sendButton" onClick={handleSend}>Send</button>
+      <button className="sendButton bg-indigo-600 text-white px-4 py-2 rounded-lg">Send</button>
     </div>
+
   );
 };
 
