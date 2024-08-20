@@ -4,23 +4,22 @@
 
 
 * {
-      /* Stylizacja scrollbar */
   &::-webkit-scrollbar {
-    width: 8px; /* Szerokość paska przewijania */
+    width: 8px; 
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(17, 25, 40, 0.5); /* Tło ścieżki paska przewijania */
+    background: rgba(17, 25, 40, 0.5);
     border-radius: 10px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.5); /* Kolor paska przewijania */
+    background: rgba(255, 255, 255, 0.5); 
     border-radius: 10px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.7); /* Kolor paska przewijania podczas najechania */
+    background: rgba(255, 255, 255, 0.7); 
   }
   }
 
@@ -39,5 +38,7 @@
   .rotate-y-180 {
     transform: rotateY(180deg);
   }
+
+  
   
   

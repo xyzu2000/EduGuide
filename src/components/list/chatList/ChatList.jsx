@@ -1,7 +1,7 @@
 import { doc, onSnapshot } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
 import basicUserImg from '../../../assets/images/user.png';
-import { db } from '../../../config/firebase';
+import { db, moveOrCreateChatUser } from '../../../config/firebase';
 import { AuthContext } from '../../../context/AuthContext';
 import { ChatContext } from '../../../context/ChatContext';
 import { UserContext } from '../../../context/UserContext';
@@ -19,8 +19,18 @@ const ChatList = () => {
         dispatch({ type: 'CHANGE_USER', payload: userInfo });
     };
 
+    const handleUserClick = async (user) => {
+        try {
+            await moveOrCreateChatUser(currentUser, user);
+            dispatch({ type: 'CHANGE_USER', payload: user });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const handleAddMode = () => {
         setAddMode(prevState => !prevState)
+        console.log('addMode:', !addMode);  // Sprawdź, co się dzieje ze stanem
     }
 
     useEffect(() => {
@@ -57,9 +67,8 @@ const ChatList = () => {
                 </div>
                 <img
                     src={addMode ? "./minus.png" : "./plus.png"}
-                    alt="Add"
                     className="w-9 h-9 bg-indigo-600 p-2 rounded-lg cursor-pointer"
-                    onClick={() => setAddMode((prev) => !prev)}
+                    onClick={handleAddMode}
                 />
             </div>
 
@@ -78,7 +87,7 @@ const ChatList = () => {
                 'Nie znaleziono czatu'
             )}
 
-            {addMode && <UsersList handleModal={handleAddMode} buttonLabel={`Przejdz do czatu`} modal={addMode} />}
+            {addMode && <UsersList handleModal={handleAddMode} buttonLabel={`Przejdz do czatu`} modal={addMode} onUserClick={(user) => handleUserClick(user)} />}
         </div>
     );
 };

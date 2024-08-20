@@ -45,7 +45,6 @@ export const Register = () => {
                     displayName: displayName,
                     email: email,
                     photoURL: avatar || './avatar.png',
-                    blocked: [],
                 });
                 await setDoc(doc(db, 'userChats', user.uid), {
                     chats: [],

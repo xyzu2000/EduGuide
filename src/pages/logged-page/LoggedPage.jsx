@@ -2,14 +2,18 @@ import React, { useContext } from 'react';
 import { FaCalendarAlt, FaComments, FaRobot } from 'react-icons/fa';
 import { LuListTodo } from "react-icons/lu";
 import { MdCreditCard } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import basicUserImg from "../../assets/images/user.png";
 import LoadingSpinner from '../../components/loadingPage/LoadingSpinner';
+import { moveOrCreateChatUser } from "../../config/firebase";
 import { AuthContext } from '../../context/AuthContext';
+import { ChatContext } from '../../context/ChatContext';
 import { UsersList } from "../../pages/users/UsersList";
 
 export const LoggedPage = () => {
     const { currentUser } = useContext(AuthContext);
+    const { dispatch } = useContext(ChatContext);
+    const navigate = useNavigate()
     const availableWidgets = [
         { id: 'chats', name: 'Czaty', path: '/chats', icon: <FaComments />, description: 'Rozmawiaj z innymi użytkownikami' },
         { id: 'chatBot', name: 'ChatBot', path: '/chatBot', icon: <FaRobot />, description: 'Skorzystaj z pomocy ChatBota' },
@@ -21,11 +25,19 @@ export const LoggedPage = () => {
         return <LoadingSpinner />
     }
 
+    const handleUserClick = async (user) => {
+        try {
+            await moveOrCreateChatUser(currentUser, user);
+            dispatch({ type: 'CHANGE_USER', payload: user });
+            navigate('/chats');
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <div className="min-h-screen  text-gray-900 dark:text-gray-100 flex flex-col items-center p-6">
             <div className='grid grid-cols-2'>
-                {/* Profile Section */}
                 <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 w-full max-w-md mb-8">
                     <div className="flex flex-col items-center">
                         <img
@@ -39,7 +51,6 @@ export const LoggedPage = () => {
                             Edytuj profil
                         </Link>
                     </div>
-                    {/* Widgets Section */}
                     <div className="flex flex-col gap-6 w-full max-w-md mb-8">
                         {availableWidgets.map((widget) => (
                             <Link
@@ -58,7 +69,7 @@ export const LoggedPage = () => {
                 </div>
 
                 <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg w-full max-w-md mb-8">
-                    <UsersList className="relative top-0 left-0 w-full  max-h-full overflow-y-auto bg-none" buttonLabel=">" />
+                    <UsersList className="relative top-0 left-0 w-full  max-h-full overflow-y-auto bg-none" buttonLabel=">" onUserClick={(user) => handleUserClick(user)} />
                 </div>
             </div>
         </div>

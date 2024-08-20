@@ -44,7 +44,7 @@ export const ChatBot = () => {
     };
 
     const updatedMessages = [...messages, prompt];
-    setPrevMessages(messages); // Save the current state before updating
+    setPrevMessages(messages);
     setMessages(updatedMessages);
 
     try {
@@ -98,7 +98,7 @@ export const ChatBot = () => {
   };
 
   const handleHistoryClick = (question, answer) => {
-    setPrevMessages(messages); // Save current state before switching to history
+    setPrevMessages(messages);
     setMessages([
       { role: 'user', content: question },
       { role: 'assistant', content: answer },

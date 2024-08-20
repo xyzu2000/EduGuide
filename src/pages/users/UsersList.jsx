@@ -38,7 +38,7 @@ export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel, classN
 
   return (
     <div className={clsx("fixed inset-20 max-w-max max-h-[80%] h-screen flex flex-col mx-auto p-5", className)}>
-      <div className="flex flex-col text-white bg-white dark:bg-gray-900 p-5 rounded-xl overflow-auto relative ">
+      <div className="flex flex-col text-white bg-white dark:bg-gray-900 p-5 rounded-xl overflow-auto  ">
         <h3 className="mb-5 text-xl font-bold bg-violet-400 p-4 rounded-xl">
           Lista Użytkowników
         </h3>
@@ -54,18 +54,20 @@ export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel, classN
         <div className="flex-1 overflow-auto mb-5">
           {filteredUsers.map((user) => (
             <div
-              key={user.uid}  // Upewnij się, że key jest unikalny
+              key={user.uid}
               className="flex items-center justify-between p-4 mb-4 bg-white dark:bg-gray-800 rounded-xl hover:bg-zinc-200 dark:hover:bg-gray-700 "
             >
-              <div className=" flex items-center space-x-4">
+              <div className="flex items-center space-x-2 overflow-hidden">
                 <img
-                  src={user.photoURL || ''}
+                  src={user.photoURL || './avatar.png'}
                   alt={user.displayName || ''}
-                  className="userImage w-16 h-16 rounded-full"
+                  className="w-16 h-16 rounded-full"
                 />
-                <div className=''>
-                  <p className="text-lg text-black dark:text-white font-semibold">{user.displayName}</p>
-                  <p className="text-sm text-gray-400">{user.email}</p>
+                <div className="overflow-hidden">
+                  <p className="text-lg text-black dark:text-white font-semibold overflow-hidden whitespace-nowrap truncate ">
+                    {user.displayName}
+                  </p>
+                  <p className="text-sm text-gray-400 overflow-hidden whitespace-nowrap truncate ">{user.email}</p>
                 </div>
               </div>
               <div className="">
@@ -78,7 +80,6 @@ export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel, classN
               </div>
             </div>
           ))}
-
         </div>
       </div>
     </div>
