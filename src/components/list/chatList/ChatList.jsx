@@ -1,5 +1,6 @@
 import { doc, onSnapshot } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
+import { FaRocketchat } from 'react-icons/fa';
 import basicUserImg from '../../../assets/images/user.png';
 import { db, moveOrCreateChatUser } from '../../../config/firebase';
 import { AuthContext } from '../../../context/AuthContext';
@@ -28,9 +29,8 @@ const ChatList = () => {
         }
     };
 
-    const handleAddMode = () => {
-        setAddMode(prevState => !prevState)
-        console.log('addMode:', !addMode);  // Sprawdź, co się dzieje ze stanem
+    const handleAddMode = (a) => {
+        setAddMode(a => !a)
     }
 
     useEffect(() => {
@@ -54,7 +54,7 @@ const ChatList = () => {
     );
 
     return (
-        <div className="flex-1 overflow-auto text-black">
+        <div className="flex-1 overflow-auto text-black ">
             <div className="flex items-center gap-5 p-5">
                 <div className="flex items-center flex-1 gap-5 bg-indigo-600 p-2 rounded-lg">
                     <img src="./search.png" alt="Search" className="w-5 h-5" />
@@ -84,10 +84,12 @@ const ChatList = () => {
                         />
                     ))
             ) : (
-                'Nie znaleziono czatu'
+                <div className="text-center p-6 rounded-lg bg-background-chatLight dark:bg-background-chatDark">
+                    <FaRocketchat className="text-6xl text-indigo-800 mb-4 mx-auto" />
+                </div>
             )}
 
-            {addMode && <UsersList handleModal={handleAddMode} buttonLabel={`Przejdz do czatu`} modal={addMode} onUserClick={(user) => handleUserClick(user)} />}
+            {addMode && <UsersList className={'pl-[148px]'} handleModal={handleAddMode} buttonLabel={`Move to chat`} modal={addMode} onUserClick={(user) => handleUserClick(user)} />}
         </div>
     );
 };

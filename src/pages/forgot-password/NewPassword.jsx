@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import AuthTitle from '../../components/basics/AuthTitle';
 import InputField from '../../components/basics/InputField';
+import { getFirebaseAuthErrorMessage } from '../../config/firebase';
 
 const NewPassword = () => {
     const navigate = useNavigate();
@@ -15,40 +16,13 @@ const NewPassword = () => {
         console.log(email)
         try {
             await sendPasswordResetEmail(auth, email);
-            toast.success('Password reset email sent. Check your inbox.', { position: "top-center" });
+            toast.success('Password reset email sent. Check your inbox.', { position: 'bottom-right' });
 
             navigate('/');
         } catch (error) {
-            console.error('Error sending password reset email:', error);
-            let message = '';
-
-            switch (error.code) {
-                case 'auth/user-not-found':
-                    message = 'User with this email address does not exist.';
-                    break;
-                case 'auth/invalid-email':
-                    message = 'Invalid email address.';
-                    break;
-                case 'auth/missing-android-pkg-name':
-                    message = 'An Android package name must be provided.';
-                    break;
-                case 'auth/missing-continue-uri':
-                    message = 'A continue URL must be provided.';
-                    break;
-                case 'auth/missing-ios-bundle-id':
-                    message = 'An iOS Bundle ID must be provided.';
-                    break;
-                case 'auth/invalid-continue-uri':
-                    message = 'The continue URL provided is invalid.';
-                    break;
-                case 'auth/unauthorized-continue-uri':
-                    message = 'The domain of the continue URL is not whitelisted.';
-                    break;
-                default:
-                    message = 'An error occurred. Please try again later.';
-            }
-
-            toast.error(message, { position: "top-center" });
+            const message = getFirebaseAuthErrorMessage(error);
+            toast.error(message, { position: 'bottom-right' });
+            setErrorMessage(message);
         }
     };
 

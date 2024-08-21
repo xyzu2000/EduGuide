@@ -21,8 +21,6 @@ export const Register = () => {
             const file = e.target.files[0];
             const reader = new FileReader();
 
-            //todo: dodać sprawdzenie czy jest to plik graficzny i czy nie jest za duży jesli jest błąd to wyświetlic powiadomenie
-
             reader.onloadend = () => {
                 setAvatar(reader.result);
             };

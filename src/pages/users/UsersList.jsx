@@ -27,7 +27,7 @@ export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel, classN
 
   const handleUserClick = (user) => {
     onUserClick(user);
-    handleModal(false);
+    handleModal(modal);
   };
 
   const filteredUsers = users.filter((user) =>
@@ -40,7 +40,7 @@ export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel, classN
     <div className={clsx("fixed inset-20 max-w-max max-h-[80%] h-screen flex flex-col mx-auto p-5", className)}>
       <div className="flex flex-col text-white bg-white dark:bg-gray-900 p-5 rounded-xl overflow-auto  ">
         <h3 className="mb-5 text-xl font-bold bg-violet-400 p-4 rounded-xl">
-          Lista Użytkowników
+          Users List
         </h3>
         <div className="mb-5">
           <input
@@ -64,10 +64,10 @@ export const UsersList = ({ handleModal, modal, onUserClick, buttonLabel, classN
                   className="w-16 h-16 rounded-full"
                 />
                 <div className="overflow-hidden">
-                  <p className="text-lg text-black dark:text-white font-semibold overflow-hidden whitespace-nowrap truncate ">
+                  <p className="text-lg text-black dark:text-white font-semibold truncate ">
                     {user.displayName}
                   </p>
-                  <p className="text-sm text-gray-400 overflow-hidden whitespace-nowrap truncate ">{user.email}</p>
+                  <p className="text-sm text-gray-400  truncate ">{user.email}</p>
                 </div>
               </div>
               <div className="">

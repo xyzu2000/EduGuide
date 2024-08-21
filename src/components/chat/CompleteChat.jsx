@@ -38,7 +38,6 @@ const CompleteChat = ({ toggleDetail }) => {
                             <MdOutlinePhoneInTalk className="cursor-pointer" />
                             <CiVideoOn className="cursor-pointer" />
                             <CiCircleInfo className="cursor-pointer" />
-                            {/* <CiCircleInfo className="cursor-pointer" onClick={toggleDetail} /> */}
                         </div>
                     </div>
                     <div className="p-5 flex-1 overflow-auto flex flex-col gap-5">
@@ -50,8 +49,8 @@ const CompleteChat = ({ toggleDetail }) => {
                 <div className="h-screen flex flex-col items-center justify-center">
                     <div className="text-center p-6 rounded-lg shadow-lg bg-background-chatLight dark:bg-background-chatDark">
                         <FaRocketchat className="text-6xl text-indigo-800 mb-4 mx-auto" />
-                        <h2 className="text-2xl font-bold text-text-light dark:text-gray-100  mb-2">Wybierz czat</h2>
-                        <p className="text-text-dark/50">Aby rozpocząć konwersację, wybierz czat z listy</p>
+                        <h2 className="text-2xl font-bold text-text-light dark:text-gray-100  mb-2">Select a chat</h2>
+                        <p className="dark:text-text-dark/50 text-text-light">To start a conversation, select a chat from the list</p>
                     </div>
                 </div>
             )}

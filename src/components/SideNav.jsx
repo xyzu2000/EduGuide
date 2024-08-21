@@ -67,11 +67,11 @@ const SideNav = ({ className }) => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      toast.success('User logout', { position: 'top-center' });
+      toast.success('User logout', { position: 'bottom-right' });
       navigate('/');
     } catch (error) {
       toast.error(`User logout failed, ${error}`, {
-        position: 'bottom-center',
+        position: 'bottom-right',
       });
     }
   };

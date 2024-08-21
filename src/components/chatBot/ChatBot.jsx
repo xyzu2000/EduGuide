@@ -1,5 +1,6 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { FaRocketchat } from 'react-icons/fa';
 import { db } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
 import LoadingSpinner from '../loadingPage/LoadingSpinner';
@@ -116,10 +117,22 @@ export const ChatBot = () => {
         <div className="col-span-5 flex flex-col text-white bg-background-chatLight dark:bg-background-chatDark p-5 rounded-xl">
           <h3 className=" mb-5 text-xl font-bold bg-indigo-600 p-4 rounded-xl">Chat Messages</h3>
           <div className=" flex-1 mb-5 overflow-auto max-h-[66vh]">
-            {messages.map((el, i) => (
-              <Message key={i} role={el.role} content={el.content} />
-            ))}
-            <div ref={ref}></div>
+            {messages.length === 0 ?
+              (
+                <div className="flex min-h-[100%] flex-col items-center justify-center">
+                  <div className="text-center p-6 rounded-lg  bg-background-chatLight dark:bg-background-chatDark">
+                    <FaRocketchat className="text-6xl text-indigo-800 mb-4 mx-auto" />
+                    <h2 className="text-2xl font-bold text-text-light dark:text-gray-100 mb-2">Start a conversation </h2>
+                  </div>
+                </div>
+              ) :
+              <>
+                {messages.map((el, i) => (
+                  <Message key={i} role={el.role} content={el.content} />
+                ))}
+                <div ref={ref}></div>
+              </>
+            }
           </div>
           <Input
             value={input}
@@ -130,7 +143,7 @@ export const ChatBot = () => {
         </div>
         <div className="col-span-2 flex flex-col text-white bg-background-chatLight dark:bg-background-chatDark p-5 rounded-xl">
           <h3 className=" mb-5 text-xl font-bold bg-indigo-600 p-4 rounded-xl">History</h3>
-          <div className=" flex-1 mb-5">
+          <div className=" flex-1 mb-5 overflow-auto max-h-[66vh]">
             {history.map((el, i) => (
               <History
                 key={i}

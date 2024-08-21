@@ -19,12 +19,12 @@ export const Login = () => {
 
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            toast.success('User login successfull');
+            toast.success('User login successfull', { position: 'bottom-right' });
             navigate('/dashboard');
             e.target.reset();
         } catch (error) {
             const message = getFirebaseAuthErrorMessage(error);
-            toast.error(message);
+            toast.error(message, { position: 'bottom-right' });
             setErrorMessage(message);
         }
     };
@@ -51,12 +51,12 @@ export const Login = () => {
                 if (!userChatsDocSnap.exists()) {
                     await setDoc(userChatsDocRef, {});
                 }
-                toast.success('Logged in with Google');
+                toast.success('Logged in with Google', { position: 'bottom-right' });
                 navigate('/dashboard');
             }
         } catch (error) {
             const errorMessage = getFirebaseAuthErrorMessage(error);
-            toast.error(errorMessage);
+            toast.error(errorMessage, { position: 'bottom-right' });
         }
     };
 
@@ -101,7 +101,6 @@ export const Login = () => {
                 <span className="block text-center my-2 text-sm font-medium leading-6 ">
                     Or
                 </span>
-                {/* //todo: mozna stworzyc custom button zeby passowal wygladem i uzyc tej funkcji handleSignInWithGoogle */}
                 <GoogleButton
                     onClick={handleSignInWithGoogle}
                     style={{

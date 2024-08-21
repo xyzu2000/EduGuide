@@ -15,8 +15,8 @@ const CustomEvent = ({ event, handleEdit, handleDelete }) => {
 
     return (
         <div className="flex items-center justify-between">
-            <span>{event.title}</span>
-            <div className="options flex gap-2">
+            <span className='truncate'>{event.title}</span>
+            <div className="options flex gap-2 ">
                 <MdEditDocument onClick={handleEditClick} className='hover:text-indigo-300' />
                 <MdDeleteForever onClick={handleDeleteClick} className='hover:text-indigo-300' />
             </div>

@@ -8,7 +8,7 @@ import Button from "../../components/basics/Button";
 import LoadingSpinner from '../../components/loadingPage/LoadingSpinner';
 import { db } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
-import CustomEvent from './CustomEvent'; // Importuj niestandardowy komponent
+import CustomEvent from './CustomEvent';
 
 const localizer = momentLocalizer(moment);
 
@@ -34,8 +34,8 @@ export const Scheduler = () => {
             const data = docSnap.data();
             const formattedEvents = data.events.map(event => ({
               ...event,
-              start: event.start.toDate(), // Konwersja Timestamp na Date
-              end: event.end.toDate(), // Konwersja Timestamp na Date
+              start: event.start.toDate(),
+              end: event.end.toDate(),
             }));
             setEvents(formattedEvents);
           } else {
@@ -111,8 +111,8 @@ export const Scheduler = () => {
     if (currentUser) {
       const formattedEvents = updatedEvents.map(event => ({
         ...event,
-        start: Timestamp.fromDate(event.start), // Konwersja Date na Timestamp
-        end: Timestamp.fromDate(event.end), // Konwersja Date na Timestamp
+        start: Timestamp.fromDate(event.start),
+        end: Timestamp.fromDate(event.end),
       }));
       await setDoc(doc(db, "userEvents", currentUser.uid), {
         events: formattedEvents,

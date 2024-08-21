@@ -31,6 +31,7 @@ export default function FlashcardForm({ selectedFlashcard, onSave, onCancel, can
         <>
             <form onSubmit={handleSubmit}>
                 <div className="flex flex-col gap-2 bg-background-sideLight dark:bg-background-sideDark p-6 rounded-lg mb-8">
+                    <h2 className="text-xl font-semibold mb-4">{cancelEdit ? 'Edit Flashcard' : 'Add Flashcard'}</h2>
                     <InputField
                         id="term"
                         type="text"

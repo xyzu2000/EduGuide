@@ -171,7 +171,7 @@ export default function FlashcardList() {
                             term={flashcard.term}
                             definition={flashcard.definition}
                             creator={flashcard.creator}
-                        // No edit or delete for public flashcards
+                            isPublic={flashcard.isPublic}
                         />
                     ))}
                 </div>
