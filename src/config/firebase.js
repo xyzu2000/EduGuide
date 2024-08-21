@@ -1,4 +1,3 @@
-// Import the functions you need from the SDKs you need
 import { getAnalytics } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
@@ -11,11 +10,7 @@ import {
     updateDoc
 } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_API_KEY,
     authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -34,19 +29,6 @@ export const storage = getStorage();
 export const db = getFirestore();
 export const provider = new GoogleAuthProvider()
 
-// export const signInWithGoogle = () => {
-//     signInWithPopup(auth, provider).then((results) => {
-//         console.log(results)
-//         const authInfo = {
-//             userID: results.user.uid,
-//             name: results.user.displayName,
-//             profilePhoto: results.user.photoURL,
-//             isAuth: true
-//         }
-//     }).catch((error) => {
-//         console.log(error)
-//     })
-// }
 
 export function getFirebaseAuthErrorMessage(error) {
     let errorMessage;

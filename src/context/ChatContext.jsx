@@ -26,7 +26,6 @@ export const ChatContextProvider = ({ children }) => {
               ? currentUser.uid + action.payload.uid
               : action.payload.uid + currentUser.uid,
         };
-        console.log("Updated chat state:", newState);
         return newState;
       case 'SET_SHARED_MESSAGE':
         return {

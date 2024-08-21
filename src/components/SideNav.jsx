@@ -62,7 +62,6 @@ const SideNav = ({ className }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log(location.pathname);
 
   const handleLogout = async () => {
     try {

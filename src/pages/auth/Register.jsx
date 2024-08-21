@@ -35,8 +35,6 @@ export const Register = () => {
         try {
             await createUserWithEmailAndPassword(auth, email, password);
             const user = auth.currentUser;
-            console.log('current user at Register: ', user);
-            console.log('User registered successfully');
             if (user) {
                 await setDoc(doc(db, 'users', user.uid), {
                     uid: user.uid,
@@ -78,7 +76,6 @@ export const Register = () => {
     };
     const handleDisplayNameChange = (e) => {
         setDisplayName(e.target.value);
-        console.log('displayName:', displayName);
     };
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);

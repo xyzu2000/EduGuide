@@ -13,7 +13,6 @@ const NewPassword = () => {
     const handleResetPassword = async (e) => {
         e.preventDefault()
         const email = e.target.email.value;
-        console.log(email)
         try {
             await sendPasswordResetEmail(auth, email);
             toast.success('Password reset email sent. Check your inbox.', { position: 'bottom-right' });
