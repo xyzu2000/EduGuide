@@ -7,6 +7,7 @@ import { AuthContext } from '../../../context/AuthContext';
 import { ChatContext } from '../../../context/ChatContext';
 import { UserContext } from '../../../context/UserContext';
 import UsersList from '../../../pages/users/UsersList';
+import Modal from '../../basics/Modal';
 
 const ChatList = () => {
     const [chats, setChats] = useState([]);
@@ -27,11 +28,12 @@ const ChatList = () => {
         } catch (error) {
             console.error(error);
         }
+        handleAddMode()
     };
 
     const handleAddMode = (a) => {
-        setAddMode(a => !a)
-    }
+        setAddMode((a) => !a);
+    };
 
     useEffect(() => {
         if (currentUser) {
@@ -50,12 +52,14 @@ const ChatList = () => {
     }, [currentUser]);
 
     const filteredChats = Object.entries(chats).filter(
-        ([chatId, chatData]) => chatData.userInfo && chatData.userInfo.displayName.toLowerCase().includes(input.toLowerCase())
+        ([chatId, chatData]) =>
+            chatData.userInfo &&
+            chatData.userInfo.displayName.toLowerCase().includes(input.toLowerCase())
     );
 
     return (
         <div className="flex-1 overflow-auto text-black ">
-            <div className="flex items-center gap-5 p-5">
+            <div className="flex items-center gap-5 lg:p-5 pb-4 lg-pb-0">
                 <div className="flex items-center flex-1 gap-5 bg-indigo-600 p-2 rounded-lg">
                     <img src="./search.png" alt="Search" className="w-5 h-5" />
                     <input
@@ -66,7 +70,7 @@ const ChatList = () => {
                     />
                 </div>
                 <img
-                    src={addMode ? "./minus.png" : "./plus.png"}
+                    src={addMode ? './minus.png' : './plus.png'}
                     className="w-9 h-9 bg-indigo-600 p-2 rounded-lg cursor-pointer"
                     onClick={handleAddMode}
                 />
@@ -88,8 +92,13 @@ const ChatList = () => {
                     <FaRocketchat className="text-6xl text-indigo-800 mb-4 mx-auto" />
                 </div>
             )}
-
-            {addMode && <UsersList className={'pl-[148px]'} handleModal={handleAddMode} buttonLabel={`Move to chat`} modal={addMode} onUserClick={(user) => handleUserClick(user)} />}
+            <Modal open={addMode} setOpen={setAddMode}>
+                <UsersList
+                    buttonLabel={`Move to chat`}
+                    isModal
+                    onUserClick={(user) => handleUserClick(user)}
+                />
+            </Modal>
         </div>
     );
 };
@@ -117,10 +126,15 @@ const ChatListItem = ({ chatData, handleSelect, getUserPhotoURL }) => {
                 className="w-12 h-12 rounded-full object-cover"
             />
             <div className="flex flex-col gap-2">
-                <span className="font-bold">{chatData.userInfo?.displayName || 'Nieznany użytkownik'}</span>
+                <span className="font-bold">
+                    {chatData.userInfo?.displayName || 'Nieznany użytkownik'}
+                </span>
                 <div
                     className="text-sm text-gray-600 dark:text-slate-300 group-hover:text-slate-300 max-w-[200px] max-h-5 overflow-hidden text-ellipsis whitespace-nowrap"
-                    dangerouslySetInnerHTML={{ __html: chatData.lastMessage?.text.substring(0, 50) || 'Brak wiadomości' }}
+                    dangerouslySetInnerHTML={{
+                        __html:
+                            chatData.lastMessage?.text.substring(0, 50) || 'Brak wiadomości',
+                    }}
                 />
             </div>
         </div>

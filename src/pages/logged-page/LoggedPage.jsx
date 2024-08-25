@@ -1,28 +1,59 @@
 import React, { useContext } from 'react';
 import { FaCalendarAlt, FaComments, FaRobot } from 'react-icons/fa';
-import { LuListTodo } from "react-icons/lu";
+import { LuListTodo } from 'react-icons/lu';
 import { MdCreditCard } from 'react-icons/md';
+import { TbChevronRight } from 'react-icons/tb';
 import { Link, useNavigate } from 'react-router-dom';
-import basicUserImg from "../../assets/images/user.png";
+import basicUserImg from '../../assets/images/user.png';
 import LoadingSpinner from '../../components/loadingPage/LoadingSpinner';
-import { moveOrCreateChatUser } from "../../config/firebase";
+import { moveOrCreateChatUser } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
 import { ChatContext } from '../../context/ChatContext';
-import { UsersList } from "../../pages/users/UsersList";
+import { UsersList } from '../../pages/users/UsersList';
 
 export const LoggedPage = () => {
     const { currentUser } = useContext(AuthContext);
     const { dispatch } = useContext(ChatContext);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const availableWidgets = [
-        { id: 'chats', name: 'Czaty', path: '/chats', icon: <FaComments />, description: 'Rozmawiaj z innymi użytkownikami' },
-        { id: 'chatBot', name: 'ChatBot', path: '/chatBot', icon: <FaRobot />, description: 'Skorzystaj z pomocy ChatBota' },
-        { id: 'calendar', name: 'Calendar', path: '/scheduler', icon: <FaCalendarAlt />, description: 'Zarządzaj swoimi wydarzeniami i spotkaniami' },
-        { id: 'flashcards', name: 'Flashcards', path: '/flashcards', icon: <MdCreditCard />, description: 'Tworz oraz udostepniaj swoje fiszki' },
-        { id: 'pomodoro', name: 'Pomodoros', path: '/pomodoro', icon: <LuListTodo />, description: 'Odliczaj czas swojej nauki' },
+        {
+            id: 'chats',
+            name: 'Czaty',
+            path: '/chats',
+            icon: <FaComments />,
+            description: 'Rozmawiaj z innymi użytkownikami',
+        },
+        {
+            id: 'chatBot',
+            name: 'ChatBot',
+            path: '/chatBot',
+            icon: <FaRobot />,
+            description: 'Skorzystaj z pomocy ChatBota',
+        },
+        {
+            id: 'calendar',
+            name: 'Calendar',
+            path: '/scheduler',
+            icon: <FaCalendarAlt />,
+            description: 'Zarządzaj swoimi wydarzeniami i spotkaniami',
+        },
+        {
+            id: 'flashcards',
+            name: 'Flashcards',
+            path: '/flashcards',
+            icon: <MdCreditCard />,
+            description: 'Tworz oraz udostepniaj swoje fiszki',
+        },
+        {
+            id: 'pomodoro',
+            name: 'Pomodoros',
+            path: '/pomodoro',
+            icon: <LuListTodo />,
+            description: 'Odliczaj czas swojej nauki',
+        },
     ];
     if (!currentUser) {
-        return <LoadingSpinner />
+        return <LoadingSpinner />;
     }
 
     const handleUserClick = async (user) => {
@@ -37,8 +68,8 @@ export const LoggedPage = () => {
 
     return (
         <div className="min-h-screen  text-gray-900 dark:text-gray-100 flex flex-col items-center p-6">
-            <div className='grid grid-cols-2'>
-                <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 w-full max-w-md mb-8">
+            <div className="grid gird-cols-1 lg:grid-cols-2 w-full gap-8">
+                <div className="bg-zinc-50 dark:bg-gray-800 shadow-lg rounded-lg p-6 w-full mb-8 justify-items-stretch">
                     <div className="flex flex-col items-center">
                         <img
                             src={currentUser.photoURL || basicUserImg}
@@ -47,29 +78,40 @@ export const LoggedPage = () => {
                         />
                         <h1 className="text-2xl font-semibold mb-2">{`Witaj, ${currentUser.displayName}!`}</h1>
                         <p className="text-gray-600 dark:text-gray-400 mb-4">{`Email: ${currentUser.email}`}</p>
-                        <Link to="/update-profile" className="text-indigo-600 hover:underline">
+                        <Link
+                            to="/update-profile"
+                            className="text-indigo-600 hover:underline"
+                        >
                             Edytuj profil
                         </Link>
                     </div>
-                    <div className="flex flex-col gap-6 w-full max-w-md mb-8">
+                    <div className="flex flex-col gap-6 w-full  mb-8">
                         {availableWidgets.map((widget) => (
                             <Link
                                 key={widget.path}
                                 to={widget.path}
-                                className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105"
+                                className="bg-zinc-50 dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105"
                             >
                                 <div className="flex items-center mb-4">
-                                    <span className="text-2xl text-indigo-600 mr-2">{widget.icon}</span>
+                                    <span className="text-2xl text-indigo-600 mr-2">
+                                        {widget.icon}
+                                    </span>
                                     <h2 className="text-xl font-bold">{widget.name}</h2>
                                 </div>
-                                <p className="text-gray-600 dark:text-gray-400">{widget.description}</p>
+                                <p className="text-gray-600 dark:text-gray-400">
+                                    {widget.description}
+                                </p>
                             </Link>
                         ))}
                     </div>
                 </div>
-
-                <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg w-full max-w-md mb-8">
-                    <UsersList className="relative top-0 left-0 w-full  max-h-full overflow-y-auto bg-none" buttonLabel=">" onUserClick={(user) => handleUserClick(user)} />
+                <div className="bg-zinc-50 dark:bg-gray-800 shadow-lg rounded-lg w-full mb-8 justify-items-stretch">
+                    <UsersList
+                        className="relative top-0 left-0 w-full max-h-full overflow-y-auto bg-none p-0 mx-0 max-w-none"
+                        buttonLabel={<TbChevronRight />}
+                        onUserClick={(user) => handleUserClick(user)}
+                        btnProps="min-w-4"
+                    />
                 </div>
             </div>
         </div>

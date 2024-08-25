@@ -7,7 +7,7 @@ const UserInfo = () => {
     const { currentUser } = useContext(AuthContext);
 
     return (
-        <div className='p-5 flex items-center justify-between text-text-light dark:text-text-dark'>
+        <div className='p-5 flex items-center justify-between text-text-light dark:text-text-dark max-lg:p-1'>
             <div className="flex items-center gap-[20px] font-bold">
                 <img src={currentUser.photoURL || "./avatar.png"} className='w-14 h-14 object-fill rounded-full' />
                 <h2>{currentUser.displayName}</h2>

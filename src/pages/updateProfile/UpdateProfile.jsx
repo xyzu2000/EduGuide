@@ -58,10 +58,12 @@ export const UpdateProfile = () => {
             });
             refreshUserData();
 
-            toast.success('Profile updated successfully', { position: 'bottom-right' });
+            toast.success('Profile updated successfully', {
+                position: 'bottom-right',
+            });
         } catch (error) {
             toast.error(`Failed to update profile: ${error.message}`, {
-                position: 'bottom-right'
+                position: 'bottom-right',
             });
         } finally {
             setLoading(false);
@@ -85,7 +87,9 @@ export const UpdateProfile = () => {
                 const credential = EmailAuthProvider.credential(user.email, password);
                 await reauthenticateWithCredential(user, credential);
                 await updatePassword(user, newPassword);
-                toast.success('Password updated successfully', { position: 'bottom-right' });
+                toast.success('Password updated successfully', {
+                    position: 'bottom-right',
+                });
             } else {
                 toast.error(
                     'Password change is only available for email/password accounts',
@@ -105,7 +109,8 @@ export const UpdateProfile = () => {
         <>
             <PageTitle title="Account" />
             <div className="flex flex-col gap-2 bg-background-chatLight dark:bg-background-chatDark p-6 rounded-lg">
-                <h2 className="text-xl font-bold flex items-center">Profile
+                <h2 className="text-xl font-bold flex items-center">
+                    Profile
                     <img
                         src={photoURL}
                         alt="Profile"
@@ -118,7 +123,7 @@ export const UpdateProfile = () => {
                     <span className="block text-sm font-medium leading-6">Avatar</span>
                     <label
                         htmlFor="dropzone-file"
-                        className="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                        className="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-zinc-50"
                     >
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg
@@ -136,7 +141,8 @@ export const UpdateProfile = () => {
                                 ></path>
                             </svg>
                             <p className="mb-2 text-sm text-gray-500">
-                                <span className="font-semibold">Click to upload</span> or drag and drop
+                                <span className="font-semibold">Click to upload</span> or drag
+                                and drop
                             </p>
                         </div>
                         <input

@@ -8,9 +8,9 @@ import {
 } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import React, { useContext, useState } from 'react';
-import { FaMicrophoneAlt, FaPhotoVideo } from "react-icons/fa";
-import { GrEmoji } from "react-icons/gr";
-import { MdOutlinePhotoCamera } from "react-icons/md";
+import { FaMicrophoneAlt, FaPhotoVideo } from 'react-icons/fa';
+import { GrEmoji } from 'react-icons/gr';
+import { MdOutlinePhotoCamera } from 'react-icons/md';
 import { v4 as uuid } from 'uuid';
 import { db, storage } from '../config/firebase';
 import { AuthContext } from '../context/AuthContext';
@@ -56,7 +56,7 @@ const Input = () => {
           'state_changed',
           null,
           (error) => {
-            console.error("Error uploading image: ", error);
+            console.error('Error uploading image: ', error);
           },
           async () => {
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
@@ -91,7 +91,7 @@ const Input = () => {
         console.warn('Nothing to send');
       }
     } catch (error) {
-      console.error("Error sending message: ", error);
+      console.error('Error sending message: ', error);
     }
   };
 
@@ -117,7 +117,7 @@ const Input = () => {
   };
 
   return (
-    <div className="bottom flex items-center justify-between p-4 border-t border-gray-300 gap-4">
+    <div className="bottom flex items-center justify-between p-4 border-t border-gray-300 gap-4 flex-wrap">
       <div className="icons flex gap-4 text-black dark:text-white">
         <input
           type="file"
@@ -140,16 +140,21 @@ const Input = () => {
         className="flex-1 bg-indigo-600 text-white p-3 rounded-lg outline-none"
       />
       <div className="emoji relative text-black dark:text-white cursor-pointer">
-        <GrEmoji onClick={() => { setOpen(prev => !prev); }} />
+        <GrEmoji
+          onClick={() => {
+            setOpen((prev) => !prev);
+          }}
+        />
         {open && (
           <div className="picker absolute bottom-12 right-0">
             <EmojiPicker onEmojiClick={handleEmoji} />
           </div>
         )}
       </div>
-      <button className="sendButton bg-indigo-600 text-white px-4 py-2 rounded-lg">Send</button>
+      <button className="sendButton bg-indigo-600 text-white px-4 py-2 rounded-lg">
+        Send
+      </button>
     </div>
-
   );
 };
 

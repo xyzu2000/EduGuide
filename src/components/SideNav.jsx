@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import { signOut } from 'firebase/auth';
 import React from 'react';
 import { FaSignOutAlt } from 'react-icons/fa';
-import { LuListTodo } from "react-icons/lu";
-import { MdCreditCard } from "react-icons/md";
+import { LuListTodo } from 'react-icons/lu';
+import { MdCreditCard } from 'react-icons/md';
 import {
   TbCalendar,
   TbHome,
@@ -15,9 +15,9 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import logo from '../assets/images/logo.svg';
 import { auth } from '../config/firebase';
-import Toggle from './toggle/Toggle';
+import Toggle from './toggle/Toggle.jsx';
 
-const menuItems = [
+export const menuItems = [
   {
     path: '/dashboard',
     name: 'Welcome',
@@ -50,7 +50,7 @@ const menuItems = [
   },
 ];
 
-const downMenuItems = [
+export const downMenuItems = [
   {
     path: '/update-profile',
     name: 'Profile',
@@ -61,7 +61,6 @@ const downMenuItems = [
 const SideNav = ({ className }) => {
   const navigate = useNavigate();
   const location = useLocation();
-
 
   const handleLogout = async () => {
     try {
@@ -78,7 +77,7 @@ const SideNav = ({ className }) => {
   return (
     <div
       className={clsx(
-        'fixed left-0 top-0 h-dvh bg-background-sideLight dark:bg-background-sideDark shadow-sm',
+        'fixed left-0 top-0 h-dvh bg-background-sideLight dark:bg-background-sideDark shadow-sm hidden lg:block',
         className
       )}
     >
@@ -88,7 +87,7 @@ const SideNav = ({ className }) => {
             <img src={logo} className="w-8 mb-2" alt="" />
             <h2 className="mb-2 text-xl font-bold tracking-tight">Edu Guide</h2>
           </Link>
-          <div className='mb-2'>
+          <div className="mb-2">
             <Toggle />
           </div>
           <div className="flex-1 flex flex-col">

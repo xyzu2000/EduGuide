@@ -1,6 +1,6 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
-import { GoMute, GoUnmute } from "react-icons/go";
+import { GoMute, GoUnmute } from 'react-icons/go';
 import 'tailwindcss/tailwind.css';
 import Button from '../../components/basics/Button';
 import InputField from '../../components/basics/InputField';
@@ -14,7 +14,10 @@ const TIMER_SOUND_URL = './alarm.mp3'; // Ścieżka do pliku dźwiękowego
 export const PomodoroTimer = () => {
     const { currentUser } = useContext(AuthContext);
     const [pomodoros, setPomodoros] = useState([]);
-    const [currentPomodoro, setCurrentPomodoro] = useState({ title: '', duration: POMODORO_DURATION });
+    const [currentPomodoro, setCurrentPomodoro] = useState({
+        title: '',
+        duration: POMODORO_DURATION,
+    });
     const [editMode, setEditMode] = useState(null);
     const [editId, setEditId] = useState(null); // Przechowuje ID edytowanego pomodoro
     const [mute, setMute] = useState(false);
@@ -27,11 +30,11 @@ export const PomodoroTimer = () => {
 
     useEffect(() => {
         const intervalIds = [];
-        pomodoros.forEach(pomodoro => {
+        pomodoros.forEach((pomodoro) => {
             if (pomodoro.isActive) {
                 const intervalId = setInterval(() => {
-                    setPomodoros(prevPomodoros => {
-                        const updatedPomodoros = prevPomodoros.map(p =>
+                    setPomodoros((prevPomodoros) => {
+                        const updatedPomodoros = prevPomodoros.map((p) =>
                             p.id === pomodoro.id && p.timeLeft > 0
                                 ? { ...p, timeLeft: p.timeLeft - 1 }
                                 : p
@@ -39,12 +42,22 @@ export const PomodoroTimer = () => {
 
                         // Update the time left in Firebase
                         if (currentUser) {
-                            const userPomodoroRef = doc(db, 'usersPomodoros', currentUser.uid);
-                            setDoc(userPomodoroRef, { pomodoros: updatedPomodoros }, { merge: true });
+                            const userPomodoroRef = doc(
+                                db,
+                                'usersPomodoros',
+                                currentUser.uid
+                            );
+                            setDoc(
+                                userPomodoroRef,
+                                { pomodoros: updatedPomodoros },
+                                { merge: true }
+                            );
                         }
 
                         // Check if any pomodoro is finished
-                        const finishedPomodoro = updatedPomodoros.find(p => p.timeLeft === 0 && p.isActive);
+                        const finishedPomodoro = updatedPomodoros.find(
+                            (p) => p.timeLeft === 0 && p.isActive
+                        );
                         if (finishedPomodoro) {
                             playNotificationSound();
                         }
@@ -60,18 +73,18 @@ export const PomodoroTimer = () => {
     }, [pomodoros, currentUser?.uid]);
 
     const handleStart = async (id) => {
-        setPomodoros(prevPomodoros => {
-            const updatedPomodoros = prevPomodoros.map(pomodoro => {
+        setPomodoros((prevPomodoros) => {
+            const updatedPomodoros = prevPomodoros.map((pomodoro) => {
                 if (pomodoro.id === id) {
                     return {
                         ...pomodoro,
-                        isActive: true
+                        isActive: true,
                     };
                 } else if (pomodoro.isActive) {
                     // Stop any other active pomodoro when a new one starts
                     return {
                         ...pomodoro,
-                        isActive: false
+                        isActive: false,
                     };
                 }
                 return pomodoro;
@@ -80,7 +93,11 @@ export const PomodoroTimer = () => {
             // Update the state and Firebase
             if (currentUser) {
                 const userPomodoroRef = doc(db, 'usersPomodoros', currentUser.uid);
-                setDoc(userPomodoroRef, { pomodoros: updatedPomodoros }, { merge: true });
+                setDoc(
+                    userPomodoroRef,
+                    { pomodoros: updatedPomodoros },
+                    { merge: true }
+                );
             }
 
             return updatedPomodoros;
@@ -88,14 +105,18 @@ export const PomodoroTimer = () => {
     };
 
     const handleStop = async (id) => {
-        setPomodoros(prevPomodoros => {
-            const updatedPomodoros = prevPomodoros.map(pomodoro =>
+        setPomodoros((prevPomodoros) => {
+            const updatedPomodoros = prevPomodoros.map((pomodoro) =>
                 pomodoro.id === id ? { ...pomodoro, isActive: false } : pomodoro
             );
 
             if (currentUser) {
                 const userPomodoroRef = doc(db, 'usersPomodoros', currentUser.uid);
-                setDoc(userPomodoroRef, { pomodoros: updatedPomodoros }, { merge: true });
+                setDoc(
+                    userPomodoroRef,
+                    { pomodoros: updatedPomodoros },
+                    { merge: true }
+                );
             }
 
             return updatedPomodoros;
@@ -103,17 +124,19 @@ export const PomodoroTimer = () => {
     };
 
     const handleReset = async (id) => {
-        setPomodoros(prevPomodoros => {
-            const updatedPomodoros = prevPomodoros.map(p =>
-                p.id === id
-                    ? { ...p, timeLeft: p.duration * 60, isActive: false }
-                    : p
+        setPomodoros((prevPomodoros) => {
+            const updatedPomodoros = prevPomodoros.map((p) =>
+                p.id === id ? { ...p, timeLeft: p.duration * 60, isActive: false } : p
             );
 
             // Update the state and Firebase
             if (currentUser) {
                 const userPomodoroRef = doc(db, 'usersPomodoros', currentUser.uid);
-                setDoc(userPomodoroRef, { pomodoros: updatedPomodoros }, { merge: true });
+                setDoc(
+                    userPomodoroRef,
+                    { pomodoros: updatedPomodoros },
+                    { merge: true }
+                );
             }
 
             return updatedPomodoros;
@@ -121,7 +144,7 @@ export const PomodoroTimer = () => {
     };
 
     const handleSavePomodoro = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         if (!currentUser) return;
 
         const userPomodoroRef = doc(db, 'usersPomodoros', currentUser.uid);
@@ -129,37 +152,51 @@ export const PomodoroTimer = () => {
         if (editMode) {
             // Edytuj istniejące pomodoro
             const userPomodoroDoc = await getDoc(userPomodoroRef);
-            const existingPomodoros = userPomodoroDoc.exists() ? userPomodoroDoc.data().pomodoros : [];
+            const existingPomodoros = userPomodoroDoc.exists()
+                ? userPomodoroDoc.data().pomodoros
+                : [];
 
-            const updatedPomodoros = existingPomodoros.map(pomodoro =>
+            const updatedPomodoros = existingPomodoros.map((pomodoro) =>
                 pomodoro.id === editId
-                    ? { ...pomodoro, ...currentPomodoro, timeLeft: currentPomodoro.duration * 60 }
+                    ? {
+                        ...pomodoro,
+                        ...currentPomodoro,
+                        timeLeft: currentPomodoro.duration * 60,
+                    }
                     : pomodoro
             );
 
             await setDoc(userPomodoroRef, { pomodoros: updatedPomodoros });
             setPomodoros(updatedPomodoros);
-            localStorage.setItem(`pomodoros_${currentUser.uid}`, JSON.stringify(updatedPomodoros));
+            localStorage.setItem(
+                `pomodoros_${currentUser.uid}`,
+                JSON.stringify(updatedPomodoros)
+            );
             setEditMode(false);
             setEditId(null);
         } else {
             // Dodaj nowe pomodoro
             const userPomodoroDoc = await getDoc(userPomodoroRef);
-            const existingPomodoros = userPomodoroDoc.exists() ? userPomodoroDoc.data().pomodoros : [];
+            const existingPomodoros = userPomodoroDoc.exists()
+                ? userPomodoroDoc.data().pomodoros
+                : [];
 
             const newPomodoro = {
                 ...currentPomodoro,
                 id: new Date().getTime(),
                 timeLeft: currentPomodoro.duration * 60, // Set timeLeft to duration in seconds
                 isActive: false,
-                mute: false
+                mute: false,
             };
 
             const updatedPomodoros = [...existingPomodoros, newPomodoro];
 
             await setDoc(userPomodoroRef, { pomodoros: updatedPomodoros });
             setPomodoros(updatedPomodoros);
-            localStorage.setItem(`pomodoros_${currentUser.uid}`, JSON.stringify(updatedPomodoros));
+            localStorage.setItem(
+                `pomodoros_${currentUser.uid}`,
+                JSON.stringify(updatedPomodoros)
+            );
             setCurrentPomodoro({ title: '', duration: POMODORO_DURATION });
         }
     };
@@ -177,11 +214,16 @@ export const PomodoroTimer = () => {
         const userPomodoroDoc = await getDoc(userPomodoroRef);
         const pomodoroData = userPomodoroDoc.data();
 
-        const updatedPomodoros = pomodoroData.pomodoros.filter(pomodoro => pomodoro.id !== id);
+        const updatedPomodoros = pomodoroData.pomodoros.filter(
+            (pomodoro) => pomodoro.id !== id
+        );
 
         await setDoc(userPomodoroRef, { pomodoros: updatedPomodoros });
         setPomodoros(updatedPomodoros);
-        localStorage.setItem(`pomodoros_${currentUser.uid}`, JSON.stringify(updatedPomodoros));
+        localStorage.setItem(
+            `pomodoros_${currentUser.uid}`,
+            JSON.stringify(updatedPomodoros)
+        );
     };
 
     const fetchPomodoros = async () => {
@@ -193,10 +235,13 @@ export const PomodoroTimer = () => {
         if (userPomodoroDoc.exists()) {
             const fetchedPomodoros = userPomodoroDoc.data().pomodoros || [];
             setPomodoros(fetchedPomodoros);
-            localStorage.setItem(`pomodoros_${currentUser.uid}`, JSON.stringify(fetchedPomodoros));
+            localStorage.setItem(
+                `pomodoros_${currentUser.uid}`,
+                JSON.stringify(fetchedPomodoros)
+            );
 
             // Ustaw stan mute na podstawie aktywnego pomodoro
-            const activePomodoro = fetchedPomodoros.find(p => p.isActive);
+            const activePomodoro = fetchedPomodoros.find((p) => p.isActive);
             if (activePomodoro) {
                 setMute(activePomodoro.mute || false);
             }
@@ -215,13 +260,15 @@ export const PomodoroTimer = () => {
             // Aktualizuj stan mute w Firebase
             const userPomodoroRef = doc(db, 'usersPomodoros', currentUser.uid);
 
-            const updatedPomodoros = pomodoros.map(pomodoro =>
-                pomodoro.isActive
-                    ? { ...pomodoro, mute: newMuteState }
-                    : pomodoro
+            const updatedPomodoros = pomodoros.map((pomodoro) =>
+                pomodoro.isActive ? { ...pomodoro, mute: newMuteState } : pomodoro
             );
 
-            await setDoc(userPomodoroRef, { pomodoros: updatedPomodoros }, { merge: true });
+            await setDoc(
+                userPomodoroRef,
+                { pomodoros: updatedPomodoros },
+                { merge: true }
+            );
         }
     };
 
@@ -238,7 +285,9 @@ export const PomodoroTimer = () => {
 
             <div className="mb-8">
                 <div className="flex flex-col gap-2 bg-background-chatLight dark:bg-background-chatDark p-6 rounded-lg">
-                    <h2 className="text-xl font-semibold mb-4">{editMode ? 'Edit Pomodoro' : 'Add Pomodoro'}</h2>
+                    <h2 className="text-xl font-semibold mb-4">
+                        {editMode ? 'Edit Pomodoro' : 'Add Pomodoro'}
+                    </h2>
                     <form className="mb-4" onSubmit={handleSavePomodoro}>
                         <InputField
                             required
@@ -246,19 +295,26 @@ export const PomodoroTimer = () => {
                             value={currentPomodoro.title}
                             placeholder="Title"
                             className="mb-2"
-                            onChange={(e) => setCurrentPomodoro(prev => ({ ...prev, title: e.target.value }))}
+                            onChange={(e) =>
+                                setCurrentPomodoro((prev) => ({
+                                    ...prev,
+                                    title: e.target.value,
+                                }))
+                            }
                         />
                         <InputField
                             required
                             type="number"
                             value={currentPomodoro.duration}
                             placeholder="Duration (minutes)"
-                            onChange={(e) => setCurrentPomodoro(prev => ({ ...prev, duration: Number(e.target.value) }))}
+                            onChange={(e) =>
+                                setCurrentPomodoro((prev) => ({
+                                    ...prev,
+                                    duration: Number(e.target.value),
+                                }))
+                            }
                         />
-                        <Button
-                            onClick={handleSavePomodoro}
-                            className='mt-4'
-                        >
+                        <Button onClick={handleSavePomodoro} className="mt-4">
                             {editMode ? 'Save Changes' : 'Add Pomodoro'}
                         </Button>
                     </form>
@@ -267,48 +323,44 @@ export const PomodoroTimer = () => {
                 <div className="flex flex-col gap-2 bg-background-chatLight dark:bg-background-chatDark  p-6 rounded-lg mt-8">
                     <h2 className="text-xl font-semibold mb-4">Your Pomodoros</h2>
                     <ul>
-                        {pomodoros.map(pomodoro => (
-                            <li key={pomodoro.id} className="flex justify-between items-center mb-4 p-4 bg-gray-100 dark:bg-background-sideDark rounded-lg">
+                        {pomodoros.map((pomodoro) => (
+                            <li
+                                key={pomodoro.id}
+                                className="flex justify-between items-center mb-4 p-4 gap-4 bg-zinc-50 dark:bg-background-sideDark rounded-lg"
+                            >
                                 <div>
-                                    <h3 className="text-lg font-semibold dark:text-white">{pomodoro.title}</h3>
+                                    <h3 className="text-lg font-semibold dark:text-white">
+                                        {pomodoro.title}
+                                    </h3>
                                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                                        Time Left: {Math.floor(pomodoro.timeLeft / 60)}:{('0' + (pomodoro.timeLeft % 60)).slice(-2)}
+                                        Time Left: {Math.floor(pomodoro.timeLeft / 60)}:
+                                        {('0' + (pomodoro.timeLeft % 60)).slice(-2)}
                                     </p>
                                 </div>
-                                <div className='flex items-center gap-1'>
+                                <div className="flex items-center gap-2 flex-wrap">
                                     {pomodoro.isActive && (
                                         <div onClick={handleMute} className="mr-2 cursor-pointer">
-                                            {mute ?
-                                                <GoMute className='dark:text-white' /> :
-                                                <GoUnmute className='dark:text-white' />}
+                                            {mute ? (
+                                                <GoMute className="dark:text-white" />
+                                            ) : (
+                                                <GoUnmute className="dark:text-white" />
+                                            )}
                                         </div>
                                     )}
                                     {pomodoro.isActive ? (
-                                        <Button
-                                            onClick={() => handleStop(pomodoro.id)}
-                                        >
+                                        <Button onClick={() => handleStop(pomodoro.id)}>
                                             Stop
                                         </Button>
                                     ) : (
-                                        <Button
-                                            onClick={() => handleStart(pomodoro.id)}
-                                        >
+                                        <Button onClick={() => handleStart(pomodoro.id)}>
                                             Start
                                         </Button>
                                     )}
-                                    <Button
-                                        onClick={() => handleReset(pomodoro.id)}
-                                    >
+                                    <Button onClick={() => handleReset(pomodoro.id)}>
                                         Reset
                                     </Button>
-                                    <Button
-                                        onClick={() => handleEdit(pomodoro)}
-                                    >
-                                        Edit
-                                    </Button>
-                                    <Button
-                                        onClick={() => handleDeletePomodoro(pomodoro.id)}
-                                    >
+                                    <Button onClick={() => handleEdit(pomodoro)}>Edit</Button>
+                                    <Button onClick={() => handleDeletePomodoro(pomodoro.id)}>
                                         Delete
                                     </Button>
                                 </div>

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import GlobalTimerDisplay from './GlobalTimerDisplay';
+import MobileHeader from './MobileHeader';
 import SideNav from './SideNav';
 import LoadingSpinner from './loadingPage/LoadingSpinner';
 
@@ -9,13 +10,13 @@ export const ProtectedRoute = () => {
   const { currentUser } = useContext(AuthContext) || {};
   const [checkingAuth, setCheckingAuth] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
 
   useEffect(() => {
     const checkAuthStatus = () => {
       setTimeout(() => {
         if (!currentUser) {
-          navigate(location.pathname, { replace: true })
+          navigate(location.pathname, { replace: true });
         }
         setCheckingAuth(false);
       }, 500);
@@ -30,10 +31,11 @@ export const ProtectedRoute = () => {
 
   return (
     <>
+      <MobileHeader />
       <SideNav />
-      <div className="pl-[148px]">
+      <div className="lg:pl-[148px]">
         <div className="p-4 sm:p-6 lg:p-20">
-          <GlobalTimerDisplay /> {/* Dodaj GlobalTimerDisplay tutaj */}
+          <GlobalTimerDisplay />
           <Outlet />
         </div>
       </div>

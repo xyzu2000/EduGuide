@@ -4,7 +4,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../../assets/css/Scheduler.css';
-import Button from "../../components/basics/Button";
+import Button from '../../components/basics/Button';
+import Modal from '../../components/basics/Modal';
 import LoadingSpinner from '../../components/loadingPage/LoadingSpinner';
 import { db } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
@@ -23,26 +24,25 @@ export const Scheduler = () => {
   const [newStart, setNewStart] = useState(null);
   const [newEnd, setNewEnd] = useState(null);
 
-
   useEffect(() => {
     const fetchUserEvents = async () => {
       if (currentUser) {
-        const docRef = doc(db, "userEvents", currentUser.uid);
+        const docRef = doc(db, 'userEvents', currentUser.uid);
         try {
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             const data = docSnap.data();
-            const formattedEvents = data.events.map(event => ({
+            const formattedEvents = data.events.map((event) => ({
               ...event,
               start: event.start.toDate(),
               end: event.end.toDate(),
             }));
             setEvents(formattedEvents);
           } else {
-            console.log("No events found for this user");
+            console.log('No events found for this user');
           }
         } catch (error) {
-          console.error("Error fetching user events:", error);
+          console.error('Error fetching user events:', error);
         }
       }
     };
@@ -100,7 +100,8 @@ export const Scheduler = () => {
 
   const confirmDeleteEvent = () => {
     const updatedEvents = events.filter(
-      (evt) => evt.start !== selectedEvent.start || evt.end !== selectedEvent.end
+      (evt) =>
+        evt.start !== selectedEvent.start || evt.end !== selectedEvent.end
     );
     setEvents(updatedEvents);
     saveEventsToFirestore(updatedEvents);
@@ -109,17 +110,16 @@ export const Scheduler = () => {
 
   const saveEventsToFirestore = async (updatedEvents) => {
     if (currentUser) {
-      const formattedEvents = updatedEvents.map(event => ({
+      const formattedEvents = updatedEvents.map((event) => ({
         ...event,
         start: Timestamp.fromDate(event.start),
         end: Timestamp.fromDate(event.end),
       }));
-      await setDoc(doc(db, "userEvents", currentUser.uid), {
+      await setDoc(doc(db, 'userEvents', currentUser.uid), {
         events: formattedEvents,
       });
     }
   };
-
 
   const handleEdit = (event) => {
     setEventTitle(event.title);
@@ -130,12 +130,12 @@ export const Scheduler = () => {
   };
 
   if (!currentUser) {
-    return <LoadingSpinner />
+    return <LoadingSpinner />;
   }
 
   return (
     <div className="text-violet-700 flex flex-col justify-center items-center">
-      <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8 w-full max-w-4xl mb-8">
+      <div className="bg-zinc-50 rounded-lg shadow-md p-4 sm:p-6 lg:p-8 w-full max-w-4xl mb-8">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-center flex-1">Scheduler</h1>
         </div>
@@ -150,98 +150,79 @@ export const Scheduler = () => {
           onSelectEvent={handleSelectEvent}
           components={{
             event: ({ event }) => (
-              <CustomEvent event={event} handleEdit={handleEdit} handleDelete={handleDeleteEvent} />
+              <CustomEvent
+                event={event}
+                handleEdit={handleEdit}
+                handleDelete={handleDeleteEvent}
+              />
             ),
           }}
           className="rbc-calendar"
         />
       </div>
 
-      {showEventModal && (
-        <div className="fixed inset-0 pl-[148px] bg-black bg-opacity-50 flex justify-center items-center z-10">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Dodaj Nowe Wydarzenie</h2>
-            <input
-              type="text"
-              className="w-full p-2 border border-gray-300 rounded mb-4"
-              value={eventTitle}
-              onChange={(e) => setEventTitle(e.target.value)}
-              placeholder="Nazwa Wydarzenia"
-            />
-            <Button
-              onClick={saveEvent}
-              className='mr-2'
-            >
-              Zapisz
-            </Button>
-            <Button
-              onClick={() => setShowEventModal(false)}
-            >
-              Anuluj
-            </Button>
-          </div>
+      <Modal open={showEventModal} setOpen={setShowEventModal}>
+        <div className="">
+          <h2 className="text-xl font-bold mb-4 dark:text-white">Create new event</h2>
+          <input
+            type="text"
+            className="w-full p-2 border border-gray-300 rounded mb-4"
+            value={eventTitle}
+            onChange={(e) => setEventTitle(e.target.value)}
+            placeholder="Event name"
+          />
+          <Button onClick={saveEvent} className="mr-2">
+            Save
+          </Button>
+          <Button onClick={() => setShowEventModal(false)}>Cancel</Button>
         </div>
-      )}
+      </Modal>
 
-      {showEditModal && (
-        <div className="fixed inset-0 pl-[148px] bg-black bg-opacity-50 flex justify-center items-center z-10">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Edytuj Wydarzenie</h2>
-            <input
-              type="text"
-              className="w-full p-2 border border-gray-300 rounded mb-4"
-              value={eventTitle}
-              onChange={(e) => setEventTitle(e.target.value)}
-              placeholder="Nazwa Wydarzenia"
-            />
-            <label className="block mb-2">Start:</label>
-            <input
-              type="datetime-local"
-              className="w-full p-2 border border-gray-300 rounded mb-4"
-              value={newStart ? moment(newStart).format('YYYY-MM-DDTHH:mm') : ''}
-              onChange={(e) => setNewStart(new Date(e.target.value))}
-            />
-            <label className="block mb-2">End:</label>
-            <input
-              type="datetime-local"
-              className="w-full p-2 border border-gray-300 rounded mb-4"
-              value={newEnd ? moment(newEnd).format('YYYY-MM-DDTHH:mm') : ''}
-              onChange={(e) => setNewEnd(new Date(e.target.value))}
-            />
-            <Button
-              onClick={updateEvent}
-              className='mr-2'
-            >
-              Zapisz
-            </Button>
-            <Button
-              onClick={() => setShowEditModal(false)}
-            >
-              Anuluj
-            </Button>
-          </div>
+      <Modal open={showEditModal} setOpen={setShowEditModal}>
+        <div className="">
+          <h2 className="text-xl font-bold mb-4 dark:text-white">Edit event</h2>
+          <input
+            type="text"
+            className="w-full p-2 border border-gray-300 rounded mb-4"
+            value={eventTitle}
+            onChange={(e) => setEventTitle(e.target.value)}
+            placeholder="Event name"
+          />
+          <label className="block mb-2 dark:text-white">Start:</label>
+          <input
+            type="datetime-local"
+            className="w-full p-2 border border-gray-300 rounded mb-4"
+            value={
+              newStart ? moment(newStart).format('YYYY-MM-DDTHH:mm') : ''
+            }
+            onChange={(e) => setNewStart(new Date(e.target.value))}
+          />
+          <label className="block mb-2 dark:text-white">End:</label>
+          <input
+            type="datetime-local"
+            className="w-full p-2 border border-gray-300 rounded mb-4"
+            value={newEnd ? moment(newEnd).format('YYYY-MM-DDTHH:mm') : ''}
+            onChange={(e) => setNewEnd(new Date(e.target.value))}
+          />
+          <Button onClick={updateEvent} className="mr-2">
+            Save
+          </Button>
+          <Button onClick={() => setShowEditModal(false)}>Cancel</Button>
         </div>
-      )}
+      </Modal>
 
-      {showDeleteModal && (
-        <div className="fixed inset-0 pl-[148px] bg-black bg-opacity-50 flex justify-center items-center z-10">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Usuń Wydarzenie</h2>
-            <p className="mb-4">Czy na pewno chcesz usunąć wydarzenie '{selectedEvent?.title}'?</p>
-            <Button
-              onClick={confirmDeleteEvent}
-              className='mr-2'
-            >
-              Tak
-            </Button>
-            <Button
-              onClick={() => setShowDeleteModal(false)}
-            >
-              Nie
-            </Button>
-          </div>
+      <Modal open={showDeleteModal} setOpen={setShowDeleteModal}>
+        <div className="">
+          <h2 className="text-xl font-bold mb-4 dark:text-white">Delete event</h2>
+          <p className="mb-4 dark:text-white">
+            Are you sure you want to delete an event '{selectedEvent?.title}'?
+          </p>
+          <Button onClick={confirmDeleteEvent} className="mr-2 ">
+            Yes
+          </Button>
+          <Button onClick={() => setShowDeleteModal(false)}>No</Button>
         </div>
-      )}
+      </Modal>
     </div>
   );
 };

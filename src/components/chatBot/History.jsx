@@ -1,19 +1,20 @@
 import { arrayUnion, doc, Timestamp, updateDoc } from 'firebase/firestore';
-import React, { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { FaShare } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 import { v4 as uuid } from 'uuid';
 import { db, moveOrCreateChatUser } from '../../config/firebase';
-
-import { toast } from 'react-toastify';
 import { AuthContext } from '../../context/AuthContext';
 import { ChatContext } from '../../context/ChatContext';
 import UsersList from '../../pages/users/UsersList';
+import Modal from '../basics/Modal';
 
-export default function History({ question, answer, onClick, setModal, modal }) {
+export default function History({ question, answer, onClick }) {
   const { currentUser } = useContext(AuthContext);
   const { data, dispatch } = useContext(ChatContext);
+  const [openModal, setOpenModal] = useState(false);
 
-  const handleShareQuestion = (e) => {
+  const handleShareQuestion = () => {
     const messageContent = `
       <div>
         Message from chatBot ...
@@ -51,15 +52,14 @@ export default function History({ question, answer, onClick, setModal, modal }) 
       </div>
     `;
     dispatch({ type: 'SET_SHARED_MESSAGE', payload: messageContent });
-    setModal(prev => !prev);
-  };
-
-  const handleModal = (e) => {
-    setModal(prev => !prev);
+    setOpenModal(true);
   };
 
   const handleUserClick = async (user) => {
-    const chatId = currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid;
+    const chatId =
+      currentUser.uid > user.uid
+        ? currentUser.uid + user.uid
+        : user.uid + currentUser.uid;
     const messageContent = data.sharedMessage;
 
     try {
@@ -84,20 +84,31 @@ export default function History({ question, answer, onClick, setModal, modal }) 
       await updateDoc(doc(db, 'userChats', currentUser.uid), lastMessageUpdate);
       await updateDoc(doc(db, 'userChats', user.uid), lastMessageUpdate);
 
-      setModal(false)
+      setOpenModal(false);
       toast.success('Message sent', { position: 'bottom-right' });
     } catch (err) {
       toast.error('Error sharing message:', { position: 'bottom-right' }, err);
     }
   };
 
-
   return (
-    <div className="p-5 mb-2.5 rounded-xl cursor-pointer font-semibold bg-slate-700 hover:bg-slate-800 flex justify-between items-center" onClick={onClick}>
+    <div
+      className="p-5 mb-2.5 rounded-xl cursor-pointer font-semibold bg-slate-700 hover:bg-slate-800 flex justify-between items-center"
+      onClick={onClick}
+    >
       <p>{question}...</p>
       <div className="flex items-center gap-2">
-        <FaShare className="hover:text-indigo-400 active:text-indigo-700 min-w-5 max-w-5 cursor-pointer" onClick={handleShareQuestion} />
-        {modal && <UsersList handleModal={handleModal} buttonLabel={'Share'} onUserClick={(user) => handleUserClick(user)} />}
+        <FaShare
+          className="hover:text-indigo-400 active:text-indigo-700 min-w-5 max-w-5 cursor-pointer"
+          onClick={handleShareQuestion}
+        />
+        <Modal open={openModal} setOpen={setOpenModal}>
+          <UsersList
+            buttonLabel={'Share'}
+            onUserClick={(user) => handleUserClick(user)}
+            isModal
+          />
+        </Modal>
       </div>
     </div>
   );
