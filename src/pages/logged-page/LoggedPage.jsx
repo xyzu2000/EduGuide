@@ -118,5 +118,4 @@ export const LoggedPage = () => {
         </div>
     );
 };
-
 export default LoggedPage;
