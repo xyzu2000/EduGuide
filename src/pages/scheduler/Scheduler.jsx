@@ -135,7 +135,7 @@ export const Scheduler = () => {
 
   return (
     <div className="text-violet-700 flex flex-col justify-center items-center">
-      <div className="bg-zinc-50 rounded-lg shadow-md p-4 sm:p-6 lg:p-8 w-full max-w-4xl mb-8">
+      <div className="bg-zinc-50 rounded-lg shadow-md p-4 sm:p-6 lg:p-8 w-full max-w-4xl ">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-center flex-1">Scheduler</h1>
         </div>

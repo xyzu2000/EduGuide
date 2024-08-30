@@ -56,7 +56,7 @@ export const UsersList = ({
         <div className="mb-5">
           <input
             type="text"
-            placeholder="Szukaj..."
+            placeholder="Search..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="w-full p-2 rounded-lg border border-gray-700 bg-zinc-50 dark:bg-gray-800 text-black dark:text-white"
@@ -66,7 +66,7 @@ export const UsersList = ({
           {filteredUsers.map((user) => (
             <div
               key={user.uid}
-              className="flex items-center justify-between p-4 mb-4 bg-zinc-50 dark:bg-gray-800 rounded-xl hover:bg-zinc-200 dark:hover:bg-gray-700 flex-wrap"
+              className="flex items-center justify-between p-4 mb-4 bg-zinc-50 dark:bg-gray-800 rounded-xl hover:bg-zinc-200 dark:hover:bg-gray-700 "
             >
               <div className="flex items-center space-x-1 md:space-x-2 overflow-hidden">
                 <img

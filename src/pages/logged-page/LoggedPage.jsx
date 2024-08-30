@@ -18,40 +18,41 @@ export const LoggedPage = () => {
     const availableWidgets = [
         {
             id: 'chats',
-            name: 'Czaty',
+            name: 'Chats',
             path: '/chats',
             icon: <FaComments />,
-            description: 'Rozmawiaj z innymi użytkownikami',
+            description: 'Chat with other users',
         },
         {
             id: 'chatBot',
             name: 'ChatBot',
             path: '/chatBot',
             icon: <FaRobot />,
-            description: 'Skorzystaj z pomocy ChatBota',
+            description: 'Get assistance from the ChatBot',
         },
         {
             id: 'calendar',
-            name: 'Calendar',
+            name: 'Scheduler',
             path: '/scheduler',
             icon: <FaCalendarAlt />,
-            description: 'Zarządzaj swoimi wydarzeniami i spotkaniami',
+            description: 'Manage your events and meetings',
         },
         {
             id: 'flashcards',
             name: 'Flashcards',
             path: '/flashcards',
             icon: <MdCreditCard />,
-            description: 'Tworz oraz udostepniaj swoje fiszki',
+            description: 'Create and share your flashcards',
         },
         {
             id: 'pomodoro',
             name: 'Pomodoros',
             path: '/pomodoro',
             icon: <LuListTodo />,
-            description: 'Odliczaj czas swojej nauki',
+            description: 'Track your study time',
         },
     ];
+
     if (!currentUser) {
         return <LoadingSpinner />;
     }
@@ -67,22 +68,22 @@ export const LoggedPage = () => {
     };
 
     return (
-        <div className="min-h-screen  text-gray-900 dark:text-gray-100 flex flex-col items-center p-6">
+        <div className="min-h-screen  text-gray-900 dark:text-gray-100 flex flex-col items-center">
             <div className="grid gird-cols-1 lg:grid-cols-2 w-full gap-8">
-                <div className="bg-zinc-50 dark:bg-gray-800 shadow-lg rounded-lg p-6 w-full mb-8 justify-items-stretch">
+                <div className="bg-zinc-50 dark:bg-gray-800 shadow-lg rounded-lg lg:p-6 w-full mb-8 justify-items-stretch">
                     <div className="flex flex-col items-center">
                         <img
                             src={currentUser.photoURL || basicUserImg}
                             alt="Profile"
                             className="w-24 h-24 rounded-full mb-4 border-4 border-indigo-500"
                         />
-                        <h1 className="text-2xl font-semibold mb-2">{`Witaj, ${currentUser.displayName}!`}</h1>
+                        <h1 className="text-2xl font-semibold mb-2">{`Welcome, ${currentUser.displayName}!`}</h1>
                         <p className="text-gray-600 dark:text-gray-400 mb-4">{`Email: ${currentUser.email}`}</p>
                         <Link
                             to="/update-profile"
                             className="text-indigo-600 hover:underline"
                         >
-                            Edytuj profil
+                            Edit profile
                         </Link>
                     </div>
                     <div className="flex flex-col gap-6 w-full  mb-8">
@@ -105,7 +106,7 @@ export const LoggedPage = () => {
                         ))}
                     </div>
                 </div>
-                <div className="bg-zinc-50 dark:bg-gray-800 shadow-lg rounded-lg w-full mb-8 justify-items-stretch">
+                <div className="bg-zinc-50 dark:bg-gray-800 shadow-lg rounded-lg w-full lg:mb-8 justify-items-stretch">
                     <UsersList
                         className="relative top-0 left-0 w-full max-h-full overflow-y-auto bg-none p-0 mx-0 max-w-none"
                         buttonLabel={<TbChevronRight />}

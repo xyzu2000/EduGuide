@@ -41,14 +41,12 @@ const Input = () => {
     }
 
     if (text.trim() === '' && !img) {
-      // Case 1: User tries to send an empty message without an image
       console.warn('Cannot send an empty message without an image');
       return;
     }
 
     try {
       if (img) {
-        // Case 3: User is sending an image (with or without text)
         const storageRef = ref(storage, uuid());
         const uploadTask = uploadBytesResumable(storageRef, img);
 
@@ -63,7 +61,7 @@ const Input = () => {
             await updateDoc(doc(db, 'chats', data.chatId), {
               messages: arrayUnion({
                 id: uuid(),
-                text: text.trim() || null, // Use text or null if it's empty
+                text: text.trim() || null,
                 senderId: currentUser.uid,
                 date: Timestamp.now(),
                 img: downloadURL,
@@ -75,7 +73,6 @@ const Input = () => {
           }
         );
       } else if (text.trim() !== '') {
-        // Case 2: User is sending only text without an image
         await updateDoc(doc(db, 'chats', data.chatId), {
           messages: arrayUnion({
             id: uuid(),

@@ -127,13 +127,13 @@ const ChatListItem = ({ chatData, handleSelect, getUserPhotoURL }) => {
             />
             <div className="flex flex-col gap-2">
                 <span className="font-bold">
-                    {chatData.userInfo?.displayName || 'Nieznany użytkownik'}
+                    {chatData.userInfo?.displayName || 'Unknown user'}
                 </span>
                 <div
                     className="text-sm text-gray-600 dark:text-slate-300 group-hover:text-slate-300 max-w-[200px] max-h-5 overflow-hidden text-ellipsis whitespace-nowrap"
                     dangerouslySetInnerHTML={{
                         __html:
-                            chatData.lastMessage?.text.substring(0, 50) || 'Brak wiadomości',
+                            chatData.lastMessage?.text.substring(0, 50) || 'No messages',
                     }}
                 />
             </div>
