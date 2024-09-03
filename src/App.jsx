@@ -6,7 +6,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
 import ChatPage from './components/chat/ChatPage';
 import { ChatBot } from './components/chatBot/ChatBot';
-import TimerProvider from './context/TimerContext'; // Sprawdź, czy ścieżka jest poprawna
+import TimerProvider from './context/TimerContext';
 import { Login } from './pages/auth/Login';
 import { Register } from './pages/auth/Register';
 import FlashcardList from './pages/flashcards/FlashcardList';

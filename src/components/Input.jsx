@@ -19,7 +19,7 @@ import { ChatContext } from '../context/ChatContext';
 const Input = () => {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
-  const [img, setImg] = useState(null);
+  const [imgs, setImgs] = useState([]);
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
 
@@ -34,59 +34,65 @@ const Input = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    setImgs((prevImgs) => [...prevImgs, ...files]);
+  };
+
+  const handleRemoveImage = (index) => {
+    setImgs((prevImgs) => prevImgs.filter((_, i) => i !== index));
+  };
+
   const handleSend = async () => {
     if (!data.chatId) {
       console.error('No chatId found');
       return;
     }
 
-    if (text.trim() === '' && !img) {
+    if (text.trim() === '' && imgs.length === 0) {
       console.warn('Cannot send an empty message without an image');
       return;
     }
 
+    const messageId = uuid();
+    let imageUrls = [];
+
     try {
-      if (img) {
-        const storageRef = ref(storage, uuid());
+      for (const img of imgs) {
+        const storageRef = ref(storage, `${messageId}/${uuid()}`);
         const uploadTask = uploadBytesResumable(storageRef, img);
 
-        uploadTask.on(
-          'state_changed',
-          null,
-          (error) => {
-            console.error('Error uploading image: ', error);
-          },
-          async () => {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            await updateDoc(doc(db, 'chats', data.chatId), {
-              messages: arrayUnion({
-                id: uuid(),
-                text: text.trim() || null,
-                senderId: currentUser.uid,
-                date: Timestamp.now(),
-                img: downloadURL,
-              }),
-            });
-
-            await updateUserChats();
-            resetInput();
-          }
-        );
-      } else if (text.trim() !== '') {
-        await updateDoc(doc(db, 'chats', data.chatId), {
-          messages: arrayUnion({
-            id: uuid(),
-            text: text.trim(),
-            senderId: currentUser.uid,
-            date: Timestamp.now(),
-          }),
+        await new Promise((resolve, reject) => {
+          uploadTask.on(
+            'state_changed',
+            null,
+            (error) => {
+              console.error('Error uploading image: ', error);
+              reject(error);
+            },
+            async () => {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              imageUrls.push(downloadURL);
+              resolve();
+            }
+          );
         });
-
-        await updateUserChats();
-        resetInput();
-      } else {
-        console.warn('Nothing to send');
       }
+
+      const message = {
+        id: messageId,
+        text: text.trim() || null,
+        senderId: currentUser.uid,
+        date: Timestamp.now(),
+        img: imageUrls.length > 0 ? imageUrls : null,
+      };
+
+      await updateDoc(doc(db, 'chats', data.chatId), {
+        messages: arrayUnion(message),
+      });
+
+      await updateUserChats();
+      resetInput();
     } catch (error) {
       console.error('Error sending message: ', error);
     }
@@ -95,14 +101,14 @@ const Input = () => {
   const updateUserChats = async () => {
     await updateDoc(doc(db, 'userChats', currentUser.uid), {
       [data.chatId + '.lastMessage']: {
-        text: text.trim() || '',
+        text: text.trim() || (imgs.length > 0 ? 'Image(s)' : ''),
       },
       [data.chatId + '.date']: serverTimestamp(),
     });
 
     await updateDoc(doc(db, 'userChats', data.user.uid), {
       [data.chatId + '.lastMessage']: {
-        text: text.trim() || '',
+        text: text.trim() || (imgs.length > 0 ? 'Image(s)' : ''),
       },
       [data.chatId + '.date']: serverTimestamp(),
     });
@@ -110,7 +116,7 @@ const Input = () => {
 
   const resetInput = () => {
     setText('');
-    setImg(null);
+    setImgs([]);
   };
 
   return (
@@ -120,7 +126,8 @@ const Input = () => {
           type="file"
           style={{ display: 'none' }}
           id="file"
-          onChange={(e) => setImg(e.target.files[0])}
+          multiple
+          onChange={handleFileChange}
         />
         <label htmlFor="file">
           <FaPhotoVideo className="cursor-pointer" />
@@ -128,6 +135,27 @@ const Input = () => {
         <MdOutlinePhotoCamera className="cursor-pointer" />
         <FaMicrophoneAlt className="cursor-pointer" />
       </div>
+
+      {imgs.length > 0 && (
+        <div className="flex gap-2">
+          {imgs.map((img, index) => (
+            <div key={index} className="relative">
+              <img
+                src={URL.createObjectURL(img)}
+                alt={`Selected ${index + 1}`}
+                className="w-10 h-10 object-cover rounded-lg"
+              />
+              <button
+                onClick={() => handleRemoveImage(index)}
+                className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs"
+              >
+                x
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
       <input
         type="text"
         value={text}
@@ -148,7 +176,10 @@ const Input = () => {
           </div>
         )}
       </div>
-      <button className="sendButton bg-indigo-600 text-white px-4 py-2 rounded-lg">
+      <button
+        className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
+        onClick={handleSend}
+      >
         Send
       </button>
     </div>

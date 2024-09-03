@@ -13,7 +13,7 @@ const Message = ({ message, photoURL }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState("");
   const [senderPhotoURL, setSenderPhotoURL] = useState("");
-  const basicUserImg = 'avatar.png'
+  const basicUserImg = 'avatar.png';
 
   useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
@@ -24,7 +24,7 @@ const Message = ({ message, photoURL }) => {
       if (message.senderId) {
         const photoURL1 = message.senderId === currentUser.uid
           ? currentUser.photoURL
-          : photoURL
+          : photoURL;
         setSenderPhotoURL(photoURL1);
       }
     };
@@ -54,19 +54,20 @@ const Message = ({ message, photoURL }) => {
       ref={ref}
       className={clsx('flex gap-3', message.senderId === currentUser.uid && 'justify-end')}
     >
-      <div className={clsx('texts flex flex-col gap-2 ', message.senderId === currentUser.uid ? 'items-end' : 'items-start')}>
+      <div className={clsx('texts flex flex-col gap-2', message.senderId === currentUser.uid ? 'items-end' : 'items-start')}>
         <div className='flex gap-3 items-start'>
           <img src={senderPhotoURL || basicUserImg} alt="" className="w-8 h-8 rounded-full object-cover" />
           <p className={clsx('p-3 rounded-lg max-w-xs break-words', message.senderId === currentUser.uid ? 'dark:bg-slate-500 bg-background-light dark:text-text-dark' : 'dark:bg-zinc-800 bg-zinc-500 text-text-dark')}>
             <div dangerouslySetInnerHTML={{ __html: message.text }} />
-            {message.img && (
+            {message.img && Array.isArray(message.img) && message.img.map((img, index) => (
               <img
-                src={message.img}
+                key={index}
+                src={img}
                 className="m-auto p-3 cursor-pointer"
-                alt=""
-                onClick={() => handleImageClick(message.img)}
+                alt={`Image ${index + 1}`}
+                onClick={() => handleImageClick(img)}
               />
-            )}
+            ))}
           </p>
         </div>
         <span className="text-sm text-gray-500 dark:text-white">{getMessageDate(message.date)}</span>
@@ -75,9 +76,9 @@ const Message = ({ message, photoURL }) => {
         <ImageModal imageUrl={modalImage} closeModal={closeModal} />
       )}
     </div>
-
   );
 };
+
 const ImageModal = ({ imageUrl, closeModal }) => (
   <div
     className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 overflow-auto"

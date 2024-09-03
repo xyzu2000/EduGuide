@@ -9,14 +9,14 @@ const Messages = ({ photoURL }) => {
   const { data } = useContext(ChatContext);
 
   useEffect(() => {
-    if (!data.chatId) return; // Sprawdzenie, czy chatId istnieje
+    if (!data.chatId) return;
 
     const unSub = onSnapshot(doc(db, 'chats', data.chatId), (doc) => {
       if (doc.exists()) {
-        setMessages(doc.data().messages || []); // Użycie pustej tablicy, jeśli messages nie istnieje
+        setMessages(doc.data().messages || []);
       } else {
-        console.error("Czat nie istnieje!");
-        setMessages([]); // Ustaw pustą tablicę, jeśli czat nie istnieje
+        console.error("Chat does not exists!");
+        setMessages([]);
       }
     });
 
