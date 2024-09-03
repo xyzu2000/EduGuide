@@ -6,6 +6,7 @@ import LoadingSpinner from './loadingPage/LoadingSpinner';
 const PublicRoute = () => {
     const { currentUser } = useContext(AuthContext) || {};
     const [checkingAuth, setCheckingAuth] = useState(true);
+    const backgroundImg = './background.png';
 
     useEffect(() => {
         const checkAuthStatus = () => {
@@ -26,7 +27,8 @@ const PublicRoute = () => {
     }
 
     return (
-        <div className="bg-[url('./background.png')] bg-cover bg-no-repeat">
+        <div className=" bg-cover bg-no-repeat"
+            style={{ backgroundImage: `url(${backgroundImg})` }}>
             <Outlet />
         </div>
     );

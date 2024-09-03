@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { AuthContextProvider } from '../src/context/AuthContext';
 import { ChatContextProvider } from '../src/context/ChatContext';
-import TimerProvider from '../src/context/TimerContext'; // Sprawdź poprawność ścieżki
+import TimerProvider from '../src/context/TimerContext';
 import { UserProvider } from '../src/context/UserContext';
 import App from './App';
 import './index.css';

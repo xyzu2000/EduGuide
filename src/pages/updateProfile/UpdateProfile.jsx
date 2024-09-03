@@ -22,7 +22,6 @@ export const UpdateProfile = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
-    // Wczytanie danych użytkownika po załadowaniu komponentu
     useEffect(() => {
         if (currentUser) {
             setDisplayName(currentUser.displayName || '');
@@ -30,7 +29,6 @@ export const UpdateProfile = () => {
         }
     }, [currentUser]);
 
-    // Obsługa wyboru avatara
     const handleAvatar = (e) => {
         if (e.target.files[0]) {
             const file = e.target.files[0];
@@ -44,7 +42,6 @@ export const UpdateProfile = () => {
         }
     };
 
-    // Aktualizacja profilu
     const handleUpdateProfile = async () => {
         if (!currentUser) return;
 
@@ -118,7 +115,6 @@ export const UpdateProfile = () => {
                     />
                 </h2>
 
-                {/* Sekcja wyboru avatara */}
                 <div>
                     <span className="block text-sm font-medium leading-6">Avatar</span>
                     <label
