@@ -1,4 +1,5 @@
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import GoogleButton from 'react-google-button';
 import { Link, useNavigate } from 'react-router-dom';
@@ -6,8 +7,7 @@ import { toast } from 'react-toastify';
 import AuthTitle from '../../components/basics/AuthTitle';
 import Button from '../../components/basics/Button';
 import InputField from '../../components/basics/InputField';
-import { auth, getFirebaseAuthErrorMessage } from '../../config/firebase';
-
+import { auth, db, getFirebaseAuthErrorMessage } from '../../config/firebase';
 export const Login = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
@@ -55,9 +55,9 @@ export const Login = () => {
                 navigate('/dashboard');
             }
         } catch (error) {
-            const errorMessage = getFirebaseAuthErrorMessage(error);
-            toast.error(errorMessage, { position: 'bottom-right' });
+            toast.error(error, { position: 'bottom-right' });
         }
+
     };
 
 

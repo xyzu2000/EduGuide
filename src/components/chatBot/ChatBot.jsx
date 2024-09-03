@@ -13,7 +13,6 @@ export const ChatBot = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [history, setHistory] = useState([]);
-  //todo: check it
   const [prevMessages, setPrevMessages] = useState([]);
   const { currentUser } = useContext(AuthContext);
   const ref = useRef();

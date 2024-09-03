@@ -59,7 +59,7 @@ export function getFirebaseAuthErrorMessage(error) {
             errorMessage = 'The password is too weak.';
             break;
         default:
-            errorMessage = 'An unknown error occurred.';
+            errorMessage = `An unknown error occurred. Error code: ${error.code}`;
     }
 
     return errorMessage;
