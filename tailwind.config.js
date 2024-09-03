@@ -7,7 +7,6 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Kolory tła
         background: {
           light: '#e4e4e7', // zinc-200
           dark: '#3f3f46', // zinc-700
@@ -17,20 +16,9 @@ export default {
           chatDark: '#a1a1aa',//zinc-400
 
         },
-        // Kolory tekstu
         text: {
-          light: '#000000', // Czarny
-          dark: '#ffffff', // Biały
-        },
-        // Kolory przycisków
-        button: {
-          light: '#3b82f6', // Jasny niebieski
-          dark: '#1d4ed8', // Ciemniejszy niebieski
-        },
-        // Kolory obramowania
-        border: {
-          light: '#e5e7eb', // Jasnoszary
-          dark: '#374151', // Ciemniejszy szary
+          light: '#000000',
+          dark: '#ffffff',
         }
       },
       fontFamily: {
